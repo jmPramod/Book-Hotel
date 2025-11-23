@@ -1,0 +1,146 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Banking API Documentation",
+    "description": "API documentation for banking operations and note management",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    }
+   
+  ],
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "Endpoints for user authentication"
+    }
+  ],
+  "paths": {
+    "/register": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "User registration",
+        "description": "Creates a new user account with the provided details.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "user",
+            "description": "User registration details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RegisterUser"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "schema": {
+              "$ref": "#/definitions/RegisterUser"
+            }
+          },
+          "401": {
+            "description": "User already exists or validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "status": {
+                  "type": "integer",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "New User created"
+                },
+                "data": {
+                  "$ref": "#/definitions/RegisterUser"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "User login",
+        "description": "Authenticates a user with the provided credentials (username and password).",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "login",
+            "description": "Login credentials",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User logged in successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string",
+                  "example": "JWT_TOKEN_STRING"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Invalid username or password"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+     
+    "RegisterUser": {
+      "type": "object",
+      "properties": {
+        "username": { "type": "string", "example": "john_doe" },
+        "password": { "type": "string", "example": "securepassword" }
+      }
+    },
+    "LoginUser": {
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "example": "john_doe" },
+        "password": { "type": "string", "example": "securepassword" }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "JWTAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer <token>\""
+    }
+  },
+  "security": [
+    {
+      "JWTAuth": []
+    }
+  ]
+}

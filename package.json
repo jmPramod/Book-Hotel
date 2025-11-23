@@ -1,0 +1,53 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "API for Hotel Booking",
+  "main": "index.js",
+  "scripts": {
+    "test": " npm run test",
+    "start": "nodemon src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmPramod/Book-Hotel.git"
+  },
+  "keywords": [
+    "multer",
+    "nodemon",
+    "mongoose",
+    "cloudinary",
+    "jwt",
+    "express"
+  ],
+  "author": "Pramod J",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jmPramod/Book-Hotel/issues"
+  },
+  "homepage": "https://github.com/jmPramod/Book-Hotel#readme",
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/express-session": "^1.18.2",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.10.1",
+    "@types/swagger-ui-express": "^4.1.8",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "connect-mongo": "^5.1.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "joi": "^18.0.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.20.1",
+    "nodemon": "^3.1.11",
+    "swagger-ui-express": "^5.0.1"
+  }
+}
