@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Banking API Documentation",
-    "description": "API documentation for banking operations and note management",
+    "title": "Book Hotel API Documentation",
+    "description": "API documentation for Hotel operations and Hotel management",
     "version": "1.0.0"
   },
   "servers": [
@@ -19,7 +19,7 @@
     }
   ],
   "paths": {
-    "/register": {
+    "/api/register": {
       "post": {
         "tags": ["Authentication"],
         "summary": "User registration",
@@ -115,13 +115,41 @@
   },
   "definitions": {
      
-    "RegisterUser": {
+   "RegisterUser": {
+  "type": "object",
+  "properties": {
+    "firstName": { "type": "string", "example": "John" },
+    "lastName": { "type": "string", "example": "Doe" },
+    "phone": { "type": "number", "example": 9876543210 },
+    "address": { "type": "string", "example": "123 MG Road, Bangalore" },
+    "state": { "type": "string", "example": "Karnataka" },
+    "country": { "type": "string", "example": "India" },
+    "pinCode": { "type": "number", "example": 560001 },
+    "email": { "type": "string", "example": "john@example.com" },
+    "password": { "type": "string", "example": "SecurePass@123" },
+    "isAdmin": { 
+      "type": "string",
+      "enum": ["admin", "user"],
+      "example": "user",
+      "default": "user"
+    },
+    "profileImage": {
       "type": "object",
       "properties": {
-        "username": { "type": "string", "example": "john_doe" },
-        "password": { "type": "string", "example": "securepassword" }
+        "imageUrl": {
+          "type": "string",
+          "example": "https://res.cloudinary.com/dtvq8ysaj/image/upload/v1720770108/Global%20Images/profile_new-removebg-preview_motz7n.png"
+        },
+        "imgPublicId": {
+          "type": "string",
+          "example": null
+        }
       }
-    },
+    }
+  },
+  "required": ["firstName", "lastName", "email", "password", "phone"]
+}
+,
     "LoginUser": {
       "type": "object",
       "properties": {
