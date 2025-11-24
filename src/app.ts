@@ -10,6 +10,7 @@ import MongoStore from "connect-mongo";
 import { authRoute } from "./routes/authrouttes";
 import { ErrorHandelingMiddlewear } from "./middlewears/global.error.middlewear";
 import { incomeRoute } from "./routes/income.routes";
+import { expenseRoute } from "./routes/expense.routes";
 const app = express();
 
 if (!process.env.SESSIONS_SECRET) {
@@ -66,6 +67,8 @@ const runServer = async () => {
   app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 app.use("/api",authRoute)
 app.use("/api",incomeRoute)
+
+app.use("/api",expenseRoute)
 
  
   app.use(ErrorHandelingMiddlewear);
