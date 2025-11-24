@@ -1,4 +1,3 @@
-import React from 'react'
 import BorderAnimatedContainer from '../../components/BorderAnimatedContainer/BorderAnimatedContainer'
 
 const Home = () => {

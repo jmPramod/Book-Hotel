@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, User, Lock, Phone } from "lucide-react";
 import signupImg from "../../assets/Signup.png";
