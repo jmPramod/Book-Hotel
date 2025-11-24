@@ -28,9 +28,11 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
     req.token = token;
     jwt.verify(
       token,
-      process.env.SECRET_KEY as string,
+      process.env.ACCESS_TOKEN_SECRET as string,
       (err: any, user: any) => {
         if (err) {
+          console.log("err",err);
+          
           return next(createError(401, "Token is not Valid"));
         }
         req.user_info = user;
