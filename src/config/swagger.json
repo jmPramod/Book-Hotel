@@ -31,7 +31,7 @@
             "description": "User registration details",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/RegisterUser"
+              "$ref": "#/definitions/User"
             }
           }
         ],
@@ -39,7 +39,7 @@
           "201": {
             "description": "User created successfully",
             "schema": {
-              "$ref": "#/definitions/RegisterUser"
+              "$ref": "#/definitions/User"
             }
           },
           "401": {
@@ -60,7 +60,7 @@
                   "example": "New User created"
                 },
                 "data": {
-                  "$ref": "#/definitions/RegisterUser"
+                  "$ref": "#/definitions/User"
                 }
               }
             }
@@ -115,7 +115,7 @@
   },
   "definitions": {
      
-   "RegisterUser": {
+   "User": {
   "type": "object",
   "properties": {
     "firstName": { "type": "string", "example": "John" },
@@ -150,6 +150,7 @@
   "required": ["firstName", "lastName", "email", "password", "phone"]
 }
 ,
+
     "LoginUser": {
       "type": "object",
       "properties": {

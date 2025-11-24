@@ -92,7 +92,7 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
       .json(
         new ApiResponse(
           201,
-          { user: userResponse, accessToken, refreshToken },
+          { user: userResponse, token:{accessToken, refreshToken} },
           "User registered successfully"
         )
       );
@@ -100,5 +100,48 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
     next(error);
   }
 };
+const login=async(req: Request, res: Response, next: NextFunction)=>{
+  try {
 
-export { register };
+    const {email}=req.body
+
+
+    if(!email){
+        return next(createError(400, "Email is Required."));
+    }
+    if(!req.body.password){
+        return next(createError(400, "Password is Required."));
+    }
+
+      const existingUser = await Auth.findOne({
+    email 
+    });
+
+    if(!existingUser){
+        return next(createError(404, "Email Doesn't exit."));
+    }
+    const isMatch=await bcrypt.compare(req.body.password,existingUser.password)
+
+    if(!isMatch){
+          return next(createError(404, "Email Doesn't exit."));
+    }
+
+      const accessToken = generateAccessToken(existingUser, existingUser.isAdmin);
+    const refreshToken = generateRefreshToken(existingUser, existingUser.isAdmin);
+   const { password, __v, ...userResponse } = existingUser.toObject();
+ 
+  
+    res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { user: userResponse,tokens:{ accessToken, refreshToken} },
+          "User Logged in successfully"
+        )
+      );
+  } catch (error) {
+    next(error)
+  }
+}
+export { register,login };

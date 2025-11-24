@@ -83,7 +83,7 @@ export const RegisterSchemaValidation = Joi.object({
     imgPublicId: Joi.string().allow(null).default(null)
   }).default({})
 });
-const forgotPasswordSchemaValidation = Joi.object({
+export const forgotPasswordSchemaValidation = Joi.object({
   firstName: Joi.string().required().messages({
     "any.required": "First name is required.",
     "string.empty": "First name cannot be empty.",
@@ -117,3 +117,5 @@ const forgotPasswordSchemaValidation = Joi.object({
   }),
   isAdmin: Joi.string().valid("admin", "user").default("user"),
 });
+
+// export const/
