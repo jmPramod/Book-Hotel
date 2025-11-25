@@ -5,7 +5,7 @@ import IncomeSchema   from "../Models/icome.models";
 import { ApiResponse } from "../utils/ApiResponse";
 import ExpenseSchema from "../Models/expense.models";
 export const addExpenseController=async (req: Request, res: Response, next: NextFunction) => {
- const userId=req.user_info.id
+ const userId=req.user_info.userId
 try {
     const {icon,category,amount,date}=req.body
 
@@ -41,7 +41,7 @@ await newExpense.save()
 
 export const getExpenseController=async (req: Request, res: Response, next: NextFunction) => {
 try {
-  const userId=req.user_info.id
+  const userId=req.user_info.userId
   const expense =await ExpenseSchema.find({userId}).sort({date:-1}) 
   
   if(!expense)
@@ -64,7 +64,7 @@ try {
 
 export const downloadExcelExpenseController=async (req: Request, res: Response, next: NextFunction) => {
  try {
-  const userId=req.user_info.id
+  const userId=req.user_info.userId
   const income=await ExpenseSchema.find({userId}).sort({date:-1})
 
   const data=income.map(item=>({

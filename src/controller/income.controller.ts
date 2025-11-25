@@ -4,7 +4,7 @@ import xlsx from 'xlsx'
 import IncomeSchema   from "../Models/icome.models";
 import { ApiResponse } from "../utils/ApiResponse";
 export const addIncomeController=async (req: Request, res: Response, next: NextFunction) => {
- const userId=req.user_info.id
+ const userId=req.user_info.userId
 try {
     const {icon,source,amount,date}=req.body
 
@@ -40,7 +40,7 @@ await newIncome.save()
 
 export const getIncomeController=async (req: Request, res: Response, next: NextFunction) => {
 try {
-  const userId=req.user_info.id
+  const userId=req.user_info.userId
   const income =await IncomeSchema.find({userId}).sort({date:-1}) 
   
   if(!income)
@@ -63,7 +63,7 @@ try {
 
 export const downloadExcelController=async (req: Request, res: Response, next: NextFunction) => {
  try {
-  const userId=req.user_info.id
+  const userId=req.user_info.userId
   const income=await IncomeSchema.find({userId}).sort({date:-1})
 
   const data=income.map(item=>({

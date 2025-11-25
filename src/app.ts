@@ -11,6 +11,7 @@ import { authRoute } from "./routes/authrouttes";
 import { ErrorHandelingMiddlewear } from "./middlewears/global.error.middlewear";
 import { incomeRoute } from "./routes/income.routes";
 import { expenseRoute } from "./routes/expense.routes";
+import { dashboardRoutes } from "./routes/dashboard.routes";
 const app = express();
 
 if (!process.env.SESSIONS_SECRET) {
@@ -19,7 +20,12 @@ if (!process.env.SESSIONS_SECRET) {
 const SESSION_SECRET: string = process.env.SESSIONS_SECRET;
 
 //CORS config
-const whitelist = [process.env.CLIENT_URL,"http://localhost:5173","http://localhost:4500",'https://book-hotel-n3ht.vercel.app'];
+const whitelist = [
+  process.env.CLIENT_URL,
+  "http://localhost:5173",
+  "http://localhost:4500",
+  "https://book-hotel-n3ht.vercel.app",
+];
 
 const runServer = async () => {
   //cors
@@ -43,7 +49,7 @@ const runServer = async () => {
 
   app.use(
     sessions({
-      secret:SESSION_SECRET,
+      secret: SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
       store: MongoStore.create({
@@ -51,26 +57,26 @@ const runServer = async () => {
           process.env.NODE_ENV == "DEV"
             ? process.env.MONGO_LOCAL
             : process.env.MONGO_CLOUD,
-            collectionName:"sessions",
-            ttl:60*60,//1h session expiry
-            autoRemove:"native"
+        collectionName: "sessions",
+        ttl: 60 * 60, //1h session expiry
+        autoRemove: "native",
       }),
-      cookie:{
-        httpOnly:true,
-        secure:true,
-        sameSite:'none',
-        maxAge:60*60*1000,//1h
-      }
+      cookie: {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        maxAge: 60 * 60 * 1000, //1h
+      },
     })
   );
 
   app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
-app.use("/api",authRoute)
-app.use("/api",incomeRoute)
+  app.use("/api", authRoute);
+  app.use("/api", incomeRoute);
 
-app.use("/api",expenseRoute)
+  app.use("/api", expenseRoute);
 
- 
+  app.use("/api", dashboardRoutes);
   app.use(ErrorHandelingMiddlewear);
 
   connectDB();
