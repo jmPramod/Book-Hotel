@@ -1,11 +1,17 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, Mail, User, Lock, Phone } from "lucide-react";
+import { Eye, EyeOff, Mail, User, Lock, Phone, Sun, Moon } from "lucide-react";
 import signupImg from "../../assets/Signup.png";
+import { registerApi } from "../../utils/Api.services";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useUserStore } from "../../store/useUserStore";
+import Loading from "../../components/Loading/Loading.tsx";
 
 const fadeInput = {
   hidden: { opacity: 0, y: 40 },
-  visible: (i:number) => ({
+  visible: (i: number) => ({
     opacity: 1,
     y: 0,
     transition: { delay: 0.4 + i * 0.2, duration: 0.6 },
@@ -14,18 +20,61 @@ const fadeInput = {
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [darkMode, setDarkMode] = useState(true); // ✅ Dark mode state
+  const navigate = useNavigate();
+   const register = useUserStore((state) => state.register);
+  const loading = useUserStore((state) => state.loading);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    phone: "",
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const res = await register(formData);
+      if (res.token) {
+        localStorage.setItem("token", res.token.accessToken);
+      }
+      if (res.status === 201 || res.status === 200) {
+        toast.success("Registration successful!");
+        navigate("/dashboard");
+      } else if (res.status >= 400) {
+        toast.error(res.message || "Something went wrong!");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Something went wrong!");
+    }
+  };
+  if(loading){
+    return <Loading/>
+  }
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row overflow-hidden bg-slate-900">
-      {/* LEFT IMAGE (Top in Mobile) */}
+    <div className={`${darkMode ? "bg-slate-900 text-white" : "bg-gray-100 text-gray-900"} min-h-screen flex flex-col md:flex-row overflow-hidden`}>
+      {/* TOGGLE BUTTON */}
+      {/* <button
+        onClick={() => setDarkMode(!darkMode)}
+        className="absolute top-5 right-5 p-2 rounded-full bg-gray-700 text-white dark:bg-gray-200 dark:text-gray-900 hover:scale-105 transition"
+      >
+        {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+      </button> */}
+
+      {/* LEFT IMAGE */}
       <motion.div
         initial={{ y: -120, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1 }}
         className="w-full md:w-1/2 h-60 md:h-auto bg-contain bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url(${signupImg})`,
-        }}
+        style={{ backgroundImage: `url(${signupImg})` }}
       ></motion.div>
 
       {/* RIGHT FORM */}
@@ -36,42 +85,44 @@ const Register = () => {
         className="w-full md:w-1/2 flex items-center justify-center py-10 md:py-0"
       >
         <div className="w-full max-w-md">
-          {/* Title */}
           <motion.h2
             initial={{ opacity: 0, x: 400 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-4xl font-bold text-white text-center mb-8"
+            className="text-4xl font-bold text-center mb-8"
           >
             Create Account
           </motion.h2>
 
-          <form className="space-y-6 p-3 md:p-0">
-
+          <form className="space-y-6 p-3 md:p-0" onSubmit={handleSubmit}>
             {/* FIRST + LAST NAME */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* FIRST NAME */}
               <motion.div custom={0} variants={fadeInput} initial="hidden" animate="visible">
-                <label className="text-gray-300 text-sm">First Name</label>
-                <div className="flex items-center gap-2 mt-1 bg-slate-800 rounded-xl px-4 py-3">
-                  <User size={20} className="text-gray-400" />
+                <label className="text-sm">First Name</label>
+                <div className={`${darkMode ? "bg-slate-800" : "bg-white"} flex items-center gap-2 mt-1 rounded-xl px-4 py-3`}>
+                  <User size={20} className={`${darkMode ? "text-gray-400" : "text-gray-500"}`} />
                   <input
                     type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
                     placeholder="Enter first name"
-                    className="bg-transparent w-full outline-none text-white"
+                    className="bg-transparent w-full outline-none text-inherit"
                   />
                 </div>
               </motion.div>
 
-              {/* LAST NAME */}
               <motion.div custom={1} variants={fadeInput} initial="hidden" animate="visible">
-                <label className="text-gray-300 text-sm">Last Name</label>
-                <div className="flex items-center gap-2 mt-1 bg-slate-800 rounded-xl px-4 py-3">
-                  <User size={20} className="text-gray-400" />
+                <label className="text-sm">Last Name</label>
+                <div className={`${darkMode ? "bg-slate-800" : "bg-white"} flex items-center gap-2 mt-1 rounded-xl px-4 py-3`}>
+                  <User size={20} className={`${darkMode ? "text-gray-400" : "text-gray-500"}`} />
                   <input
                     type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
                     placeholder="Enter last name"
-                    className="bg-transparent w-full outline-none text-white"
+                    className="bg-transparent w-full outline-none text-inherit"
                   />
                 </div>
               </motion.div>
@@ -79,52 +130,53 @@ const Register = () => {
 
             {/* PHONE */}
             <motion.div custom={2} variants={fadeInput} initial="hidden" animate="visible">
-              <label className="text-gray-300 text-sm">Phone Number</label>
-              <div className="flex items-center gap-2 mt-1 bg-slate-800 rounded-xl px-4 py-3">
-                <Phone size={20} className="text-gray-400" />
+              <label className="text-sm">Phone Number</label>
+              <div className={`${darkMode ? "bg-slate-800" : "bg-white"} flex items-center gap-2 mt-1 rounded-xl px-4 py-3`}>
+                <Phone size={20} className={`${darkMode ? "text-gray-400" : "text-gray-500"}`} />
                 <input
                   type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
                   placeholder="Phone Number"
-                  className="bg-transparent w-full outline-none text-white"
+                  className="bg-transparent w-full outline-none text-inherit"
                 />
               </div>
             </motion.div>
 
             {/* EMAIL */}
             <motion.div custom={7} variants={fadeInput} initial="hidden" animate="visible">
-              <label className="text-gray-300 text-sm">Email Address</label>
-              <div className="flex items-center gap-2 mt-1 bg-slate-800 rounded-xl px-4 py-3">
-                <Mail size={20} className="text-gray-400" />
+              <label className="text-sm">Email Address</label>
+              <div className={`${darkMode ? "bg-slate-800" : "bg-white"} flex items-center gap-2 mt-1 rounded-xl px-4 py-3`}>
+                <Mail size={20} className={`${darkMode ? "text-gray-400" : "text-gray-500"}`} />
                 <input
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="Enter email"
-                  className="bg-transparent w-full outline-none text-white"
+                  className="bg-transparent w-full outline-none text-inherit"
                 />
               </div>
             </motion.div>
 
             {/* PASSWORD */}
             <motion.div custom={8} variants={fadeInput} initial="hidden" animate="visible">
-              <label className="text-gray-300 text-sm">Password</label>
-              <div className="flex items-center gap-2 mt-1 bg-slate-800 rounded-xl px-4 py-3">
-                <Lock size={20} className="text-gray-400" />
+              <label className="text-sm">Password</label>
+              <div className={`${darkMode ? "bg-slate-800" : "bg-white"} flex items-center gap-2 mt-1 rounded-xl px-4 py-3`}>
+                <Lock size={20} className={`${darkMode ? "text-gray-400" : "text-gray-500"}`} />
                 <input
                   type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                   placeholder="Strong password"
-                  className="bg-transparent w-full outline-none text-white"
+                  className="bg-transparent w-full outline-none text-inherit"
                 />
                 {showPassword ? (
-                  <EyeOff
-                    size={20}
-                    onClick={() => setShowPassword(false)}
-                    className="cursor-pointer text-gray-400"
-                  />
+                  <EyeOff size={20} onClick={() => setShowPassword(false)} className="cursor-pointer" />
                 ) : (
-                  <Eye
-                    size={20}
-                    onClick={() => setShowPassword(true)}
-                    className="cursor-pointer text-gray-400"
-                  />
+                  <Eye size={20} onClick={() => setShowPassword(true)} className="cursor-pointer" />
                 )}
               </div>
             </motion.div>
@@ -137,6 +189,7 @@ const Register = () => {
               animate="visible"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
+              type="submit"
               className="w-full bg-gradient-to-r from-purple-600 to-blue-600 py-3 px-3 rounded-xl text-white font-semibold"
             >
               Register
@@ -148,17 +201,17 @@ const Register = () => {
               variants={fadeInput}
               initial="hidden"
               animate="visible"
-              className="text-center text-gray-400 text-sm"
+              className={`${darkMode ? "text-gray-400" : "text-gray-600"} text-center text-sm`}
             >
               Already have an account?{" "}
               <a href="/login" className="text-blue-400 hover:underline">
                 Login
               </a>
             </motion.p>
-
           </form>
         </div>
       </motion.div>
+      <ToastContainer position="top-right" />
     </div>
   );
 };
