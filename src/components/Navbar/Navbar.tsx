@@ -68,9 +68,9 @@ const logout = useUserStore((state) => state.logout);
           {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
         </button>
       </nav>
-    {user&&  <SideMenu/>}
+    {user&&(location.pathname === '/sign-up'||location.pathname === '/login'||location.pathname !== '/')&&  <SideMenu/>}
 
-   {(location.pathname === '/sign-up'||location.pathname === '/login')&&<Outlet />}
+   {(location.pathname === '/sign-up'||location.pathname === '/login'||location.pathname === '/')&&<Outlet />}
     </>
   );
 };

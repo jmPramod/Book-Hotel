@@ -3,9 +3,9 @@ import AxiosInstance from "./AxiosInstance";
 
 
 // const baseUrl = process.env.REACT_APP_BASE_URL as string;
-// const baseUrl ='http://localhost:4500'
+const baseUrl ='http://localhost:4500'
 
-const baseUrl ='https://book-hotel-delta-two.vercel.app'
+// const baseUrl ='https://book-hotel-delta-two.vercel.app'
 export const loginApi = async (payload: {   
  
     email: String,
@@ -117,50 +117,53 @@ export const downloadExcelExpense=async()=>{
   }
 
 }
-export const fetchallIncome=async()=>{
- try {
-    let res = await AxiosInstance.get(`${baseUrl}/api/income`);
+export const fetchallIncome = async (page = 1, limit = 10, search = "") => {
+  try {
+    const res = await AxiosInstance.get(
+      `${baseUrl}/api/income?page=${page}&limit=${limit}&search=${search}`
+    );
 
     return {
       status: res?.status,
       statusCode: res?.data?.statusCode,
       message: res?.data.message,
-      data: res?.data?.data,
-      token: res?.data?.data.token,
+      data: res?.data?.data?.data, // income array
+      pagination: res?.data?.data?.pagination, // pagination
     };
   } catch (error: any) {
-    console.log("erroe", error);
+    console.log("error", error);
     return {
       status: error.response?.status,
-      statusCode: error.response?.data?.status,
-      message: error.response?.data.message,
-      data: null,
+      message: error.response?.data?.message,
+      data: [],
+      pagination: null,
     };
   }
+};
 
-}
-export const fetchallExpense=async()=>{
- try {
-    let res = await AxiosInstance.get(`${baseUrl}/api/expense`);
+export const fetchallExpense= async (page = 1, limit = 10, search = "") => {
+  try {
+    const res = await AxiosInstance.get(
+      `${baseUrl}/api/expense?page=${page}&limit=${limit}&search=${search}`
+    );
 
     return {
       status: res?.status,
       statusCode: res?.data?.statusCode,
       message: res?.data.message,
-      data: res?.data?.data,
-      token: res?.data?.data.token,
+      data: res?.data?.data?.data, // income array
+      pagination: res?.data?.data?.pagination, // pagination
     };
   } catch (error: any) {
-    console.log("erroe", error);
+    console.log("error", error);
     return {
       status: error.response?.status,
-      statusCode: error.response?.data?.status,
-      message: error.response?.data.message,
-      data: null,
+      message: error.response?.data?.message,
+      data: [],
+      pagination: null,
     };
   }
-
-}
+};
 
 export const addIncomeApi = async (payload: {   
   icon: String,

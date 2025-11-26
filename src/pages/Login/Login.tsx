@@ -19,7 +19,7 @@ const fadeInput = {
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   // const [darkMode, setDarkMode] = useState(true);
-    const { darkMode,  } = useUserStore();
+    const { darkMode, loading } = useUserStore();
   const login = useUserStore((state) => state.login);
 
   const navigate = useNavigate();
@@ -155,9 +155,9 @@ const Login = () => {
               whileTap={{ scale: 0.97 }}
               type="submit"
               className="w-full bg-gradient-to-r from-purple-600 to-blue-600 py-3 px-3 rounded-xl text-white font-semibold"
-            >
-              Login
-            </motion.button>
+            >{
+              loading?"Loading...":"Login"
+           } </motion.button>
 
             {/* LOGIN LINK */}
             <motion.p

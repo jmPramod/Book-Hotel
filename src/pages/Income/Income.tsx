@@ -1,117 +1,139 @@
-import  { useEffect, useState } from "react";
- 
+import { useEffect, useState, useCallback } from "react";
+import debounce from "lodash.debounce";
 import { useUserStore } from "../../store/useUserStore";
+
 import type { IncomeEntry } from "../../components/Bargraph/IncomeBarChart";
 import IncomeBarChart from "../../components/Bargraph/IncomeBarChart";
-import { addIncomeApi, deleteIncomeApi, fetchallIncome, updateIncomeApi } from "../../utils/Api.services";
+
+import {
+  addIncomeApi,
+  deleteIncomeApi,
+  fetchallIncome,
+  updateIncomeApi,
+} from "../../utils/Api.services";
+
 import IncomeModal from "./IncomeModel";
 import IncomeList from "./IncomeList";
 
 const Income = () => {
-  const { darkMode } = useUserStore();
+  const { darkMode, setLoading } = useUserStore();
 
   const [income, setIncome] = useState<IncomeEntry[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [editData, setEditData] = useState<IncomeEntry | null>(null);
 
-  const fetchIncome = async () => {
+  const [page, setPage] = useState(1);
+  const [limit] = useState(5);
+  const [pagination, setPagination] = useState({ totalItems: 0, totalPages: 1 });
+
+  const [searchText, setSearchText] = useState("");
+
+  // Fetch income with optional search
+  const fetchIncome = async (search = "") => {
+    setLoading(true);
     try {
-      const res = await fetchallIncome();
-      setIncome(res.data.data);
+      const res = await fetchallIncome(page, limit, search); // pass search to API
+      setIncome(res?.data || []);
+      setPagination(res?.pagination || { totalItems: 0, totalPages: 1 });
     } catch (error) {
-      console.log(error);
+      console.log("Error fetching income:", error);
     }
+    setLoading(false);
+  };
+
+  // Debounced search
+  const debouncedFetch = useCallback(
+    debounce((val: string) => {
+      fetchIncome(val);
+    }, 500),
+    [page]
+  );
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+    debouncedFetch(e.target.value);
   };
 
   useEffect(() => {
-    fetchIncome();
-  }, []);
+    fetchIncome(searchText);
+  }, [page]);
 
-  const handleAddIncome = async(data: any) => {
-    const newEntry: IncomeEntry = {
-      _id: crypto.randomUUID(),
-      ...data,
-    };
-    setIncome([...income, newEntry]);
- 
-try {
-  const res=await addIncomeApi(data)
-  console.log("res",res);
-  if(res.status=200){
-      fetchIncome();
-  }
-} catch (error) {
-  console.log("error",error);
-  
-}
-
+  const handleAddIncome = async (data: any) => {
+    setLoading(true);
+    try {
+      const res = await addIncomeApi(data);
+      if (res.status === 200) fetchIncome(searchText);
+    } catch (error) {
+      console.log("Error adding income:", error);
+    }
+    setLoading(false);
   };
-  console.log("add income");
-  
 
-  const handleUpdateIncome =async (data: any) => {
-    setIncome(
-      income.map((item) =>
-        item._id === editData?._id ? { ...item, ...data } : item
-      )
-    );
+  const handleUpdateIncome = async (data: any) => {
+    if (!editData?._id) return;
+    setLoading(true);
+    try {
+      const res = await updateIncomeApi(data, editData._id);
+      if (res.status === 200) fetchIncome(searchText);
+    } catch (error) {
+      console.log("Error updating income:", error);
+    }
+    setLoading(false);
     setEditData(null);
-    try {
-      if(editData&&editData._id)
-        {
-
-
-          const res=await updateIncomeApi(data,editData._id)
-          console.log("res",res);
-          if(res.status=200){
-              fetchIncome();
-          }
-        }
-} catch (error) {
-  console.log("error",error);
-  
-}
   };
 
-  const handleDeleteIncome = async(id: string) => {
-    setIncome(income.filter((i) => i._id !== id));
-
+  const handleDeleteIncome = async (id: string) => {
+    setLoading(true);
     try {
-  const res=await deleteIncomeApi(id)
-  console.log("res",res);
-  if(res.status=200){
-      fetchIncome();
-  }
-} catch (error) {
-  console.log("error",error);
-  
-}
+      const res = await deleteIncomeApi(id);
+      if (res.status === 200) fetchIncome(searchText);
+    } catch (error) {
+      console.log("Error deleting income:", error);
+    }
+    setLoading(false);
   };
 
   return (
-    <div className="p-5">
-      {/* Bar Chart */}
+    <div className="p-5 flex flex-col gap-6">
+    
+
       <IncomeBarChart income={income} darkMode={darkMode} />
 
-      {/* List */}
       <IncomeList
+      handleSearchChange={handleSearchChange}
+searchText={searchText}
         income={income}
         darkMode={darkMode}
-        onEdit={(item) => {
-          setEditData(item);
-          setShowModal(true);
-        }}
+        onEdit={(item) => { setEditData(item); setShowModal(true); }}
         onDelete={handleDeleteIncome}
         onAdd={() => setShowModal(true)}
       />
 
-      {/* Modal */}
+      <div className="flex justify-center items-center gap-6 mt-4">
+        <button
+          onClick={() => setPage((prev) => prev - 1)}
+          disabled={page === 1}
+          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+
+        <span className="text-lg font-semibold">
+          Page {page} of {pagination.totalPages}
+        </span>
+
+        <button
+          onClick={() => setPage((prev) => prev + 1)}
+          disabled={page === pagination.totalPages}
+          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+
       {showModal && (
         <IncomeModal
-          close={() => {
-            setShowModal(false);
-            setEditData(null);
-          }}
+          close={() => { setShowModal(false); setEditData(null); }}
           onSubmit={editData ? handleUpdateIncome : handleAddIncome}
           editData={editData}
           darkMode={darkMode}

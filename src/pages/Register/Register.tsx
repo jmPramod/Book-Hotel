@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, User, Lock, Phone,  } from "lucide-react";
-import signupImg from "../../assets/Signup.png"; 
+import signupImg from "../../assets/login.png"; 
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useUserStore } from "../../store/useUserStore";
-import Loading from "../../components/Loading/Loading.tsx";
+import { useUserStore } from "../../store/useUserStore"; 
 
 const fadeInput = {
   hidden: { opacity: 0, y: 40 },
@@ -19,10 +18,11 @@ const fadeInput = {
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [darkMode] = useState(true); // ✅ Dark mode state
+   const { darkMode, loading } = useUserStore();
+ // ✅ Dark mode state
   const navigate = useNavigate();
    const register = useUserStore((state) => state.register);
-  const loading = useUserStore((state) => state.loading);
+  // const loading = useUserStore((state) => state.loading);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -53,29 +53,15 @@ const Register = () => {
       toast.error(err.message || "Something went wrong!");
     }
   };
-  if(loading){
-    return <Loading/>
-  }
+  // if(loading){
+  //   return <Loading/>
+  // }
 
   return (
-    <div className={`${darkMode ? "bg-slate-900 text-white" : "bg-gray-100 text-gray-900"} min-h-screen flex flex-col md:flex-row overflow-hidden`}>
-      {/* TOGGLE BUTTON */}
-      {/* <button
-        onClick={() => setDarkMode(!darkMode)}
-        className="absolute top-5 right-5 p-2 rounded-full bg-gray-700 text-white dark:bg-gray-200 dark:text-gray-900 hover:scale-105 transition"
-      >
-        {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-      </button> */}
+    <div className={`${darkMode ? "bg-slate-900 text-white" : "bg-gray-100 text-gray-900"} min-h-[90vh] flex flex-col-reverse md:flex-row overflow-hidden`}>
+   
 
-      {/* LEFT IMAGE */}
-      <motion.div
-        initial={{ y: -120, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 1 }}
-        className="w-full md:w-1/2 h-60 md:h-auto bg-contain bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${signupImg})` }}
-      ></motion.div>
-
+   
       {/* RIGHT FORM */}
       <motion.div
         initial={{ y: 120, opacity: 0 }}
@@ -90,7 +76,7 @@ const Register = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-4xl font-bold text-center mb-8"
           >
-            Create Account
+            Create New Account
           </motion.h2>
 
           <form className="space-y-6 p-3 md:p-0" onSubmit={handleSubmit}>
@@ -191,7 +177,7 @@ const Register = () => {
               type="submit"
               className="w-full bg-gradient-to-r from-purple-600 to-blue-600 py-3 px-3 rounded-xl text-white font-semibold"
             >
-              Register
+         {loading?"Loading...":"Register"     }
             </motion.button>
 
             {/* LOGIN */}
@@ -210,6 +196,16 @@ const Register = () => {
           </form>
         </div>
       </motion.div>
+
+         {/* LEFT IMAGE */}
+      <motion.div
+        initial={{ y: -120, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 1 }}
+        className="w-full md:w-1/2 h-60 md:h-auto bg-contain bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${signupImg})` }}
+      ></motion.div>
+
       <ToastContainer position="top-right" />
     </div>
   );

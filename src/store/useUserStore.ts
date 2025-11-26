@@ -37,6 +37,8 @@ interface UserState {
 
   setUser: (user: User | null) => void;
   logout: () => void;
+  setLoading: (loading: boolean) => void;
+
 
   darkMode: boolean;
   toggleDarkMode: () => void;
@@ -51,6 +53,8 @@ export const useUserStore = create<UserState>()(
     (set, get) => ({
       user: null,
       loading: false,
+      setLoading: (loading) => set({ loading }),
+
 
       // Dark Mode
       darkMode: true,

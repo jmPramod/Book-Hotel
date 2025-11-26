@@ -1,215 +1,98 @@
-import { useEffect, useState } from "react";
-import { fetchDashBoardData } from "../../utils/Api.services";
+ 
+import { BarChart3, LineChart, PieChart, User, Image as ImageIcon, FileText, Server, LayoutDashboard } from "lucide-react";
 import { useUserStore } from "../../store/useUserStore";
-import { ArrowDownCircle, ArrowUpCircle, Wallet } from "lucide-react";
-import TatalOverView from "../../components/PieChart/TatalOverView";
-import TransactionPieChart from "../../components/PieChart/Last30DaysExpense";
-import { useNavigate } from "react-router-dom";
 
-export interface Transaction {
-  source?: string;
-  icon: string;
-  category: string;
-  _id?: string;
-  note: string;
-  amount: number;
-  type?: "income" | "expense";
-  date?: string;
-}
+ 
 
-export interface Last30DaysExpense {
-  total: number;
-  transaction: Transaction[];
-}
+const Home  = () => {
+    const { darkMode } = useUserStore();
+  
+  const cardStyle = `
+    p-5 rounded-xl shadow-md border transition hover:shadow-lg
+    ${darkMode ? "bg-gray-800 text-white border-gray-700" : "bg-white text-black border-gray-200"}
+  `;
 
-export interface Last60DaysIncome {
-  total: number;
-  transaction: Transaction[];
-}
-
-export interface DashboardData {
-  totalBalance: number;
-  totalIncome: number;
-  totalExpense: number;
-  last30DaysExpense: Last30DaysExpense;
-  last60DaysIncome: Last60DaysIncome;
-  recentTransaction: Transaction[];
-}
-
-const Home = () => {
-  const { darkMode } = useUserStore();
-  const [data, setData] = useState<DashboardData | null>(null);
-const navigate =useNavigate()
-  const getData = async () => {
-    try {
-      const res = await fetchDashBoardData(); 
-      if(res.status==200){
-
-        setData(res.data.data as DashboardData);
-      }
-    } catch (error) {
-      console.error("Dashboard fetch error:", error);
-    }
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
-
-  if (!data) return <div className="text-center p-10">Loading...</div>;
-
-  const cardStyle = `${!darkMode ? "bg-white text-black" : "bg-gray-800 text-white"} p-6 rounded-xl shadow`;
+  const sectionTitle = "text-xl font-semibold mb-3";
 
   return (
-    <div className={`${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} min-h-screen p-6`}>
-      <h1 className="text-3xl font-semibold mb-6">Dashboard</h1>
+    <div className={`min-h-screen p-6 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"}`}>
+      
+      <h1 className="text-3xl font-bold mb-6">📌 Project Overview</h1>
 
-      {/* Summary Cards */}
-      <div className="flex flex-wrap gap-5 mb-6 items-center ">
-        <div className="flex  flex-col gap-3 min-w-[30%] ">
-          <div className={`${cardStyle} flex items-center gap-4 flex-1 min-w-[250px]`}>
-          <Wallet size={40} className="text-blue-500" />
-          <div>
-            <p className="text-sm">Total Balance</p>
-            <h2 className="text-2xl font-bold">₹ {data&&data.totalBalance}</h2>
+      {/* GRID */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        {/* Dashboard Info */}
+        <div className={cardStyle}>
+          <h2 className={sectionTitle}>📊 Dashboard</h2>
+          <p className="opacity-80">
+            Overview of total income, expenses, and balance with charts like:
+          </p>
+
+          <div className="mt-3 space-y-2">
+            <div className="flex items-center gap-2"><LayoutDashboard size={20}/> Interactive Dashboard</div>
+            <div className="flex items-center gap-2"><LineChart size={20}/> Expense Line Chart</div>
+            <div className="flex items-center gap-2"><BarChart3 size={20}/> Income Bar Graph</div>
+            <div className="flex items-center gap-2"><PieChart size={20}/> Category Pie Chart</div>
           </div>
         </div>
 
-        <div className={`${cardStyle} flex items-center gap-4 flex-1 min-w-[250px]`}>
-          <ArrowUpCircle size={40} className="text-green-500" />
-          <div>
-            <p className="text-sm">Total Income</p>
-            <h2 className="text-2xl font-bold">₹ {data&&data.totalIncome}</h2>
-          </div>
-        </div>
-
-        <div className={`${cardStyle} flex items-center gap-4 flex-1 min-w-[250px]`}>
-          <ArrowDownCircle size={40} className="text-red-500" />
-          <div>
-            <p className="text-sm">Total Expense</p>
-            <h2 className="text-2xl font-bold">₹ {data&&data.totalExpense}</h2>
-          </div>
-        </div>
-
-        </div>
-        
-            {/* Pie Chart */}
-        <TatalOverView data={data} darkMode={darkMode} />
-
-     
-      </div>
-
-      {/* Last 30 Days Expense + Last 60 Days Income + Pie Chart */}
-      <div className="flex flex-wrap gap-6 mb-6">
-       {/* 30 Days Expense */}
-        <div className={`${cardStyle} flex-1 min-w-[300px]`}>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold">Last 30 Days Expense</h2>
-            <button className="text-sm text-blue-500 hover:underline" onClick={()=>navigate('/expense')}>See All</button>
-          </div>
-          <p className="text-lg font-bold">₹ {data.last30DaysExpense&&data.last30DaysExpense.total}</p>
-          <ul className="mt-4 space-y-3">
-            {data.last30DaysExpense&&data.last30DaysExpense.transaction.length === 0 ? (
-              <p className="text-sm opacity-70">No expenses</p>
-            ) : (
-              data.last30DaysExpense&&data.last30DaysExpense.transaction.map((txn, idx) => (
-                <li
-                  key={idx}
-                  className={`${!darkMode ? "bg-gray-100 text-black" : "bg-gray-700 text-white"} p-3 rounded-lg flex items-center justify-between`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="text-2xl">{txn.icon}</div>
-                    <div className="flex flex-col">
-                      <span className="font-semibold capitalize">{txn.category || txn.source}</span>
-                      <span className="text-xs opacity-70">{txn.date && new Date(txn.date).toLocaleString()}</span>
-                    </div>
-                  </div>
-                  <div className="font-bold text-red-500">- ₹ {txn.amount}</div>
-                </li>
-              ))
-            )}
+        {/* Income */}
+        <div className={cardStyle}>
+          <h2 className={sectionTitle}>💰 Income Management</h2>
+          <ul className="space-y-2 opacity-90">
+            <li>✔ Add, Update, Delete income</li>
+            <li>✔ Date & category based income</li>
+            <li>✔ Emoji picker for icons</li>
+            <li>✔ Monthly and yearly summaries</li>
           </ul>
         </div>
-        <TransactionPieChart
-  transactions={data.last30DaysExpense&&data.last30DaysExpense.transaction}
-  title="Last 30 Days Expense"
-  darkMode={darkMode}
-/>
 
-       
-    
-      </div>
+        {/* Expense */}
+        <div className={cardStyle}>
+          <h2 className={sectionTitle}>🧾 Expense Management</h2>
+          <ul className="space-y-2 opacity-90">
+            <li>✔ Add & edit expenses using modal</li>
+            <li>✔ Emoji picker support</li>
+            <li>✔ Delete expense with confirmation modal</li>
+            <li>✔ Recharts for expense trends</li>
+          </ul>
+        </div>
 
-  <div className="flex flex-wrap gap-6 mb-6">
-  
-
-       
-        {/* 60 Days Income */}
-    
-        <TransactionPieChart
-  transactions={data.last60DaysIncome&&data.last60DaysIncome.transaction}
-  title="Last 60 Days Income"
-  darkMode={darkMode}
-/>
-    <div className={`${cardStyle} flex-1 max-w-[50%]`}>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold">Last 60 Days Income</h2>
-            <button className="text-sm text-blue-500 hover:underline" onClick={()=>navigate('/income')}>See All</button>
+        {/* Profile Page */}
+        <div className={cardStyle}>
+          <h2 className={sectionTitle}>👤 Profile Page</h2>
+          <div className="flex items-center gap-2 mb-2">
+            <User size={20}/> Update Personal Information
           </div>
-          <p className="text-lg font-bold">₹ {data.last60DaysIncome&&data.last60DaysIncome.total}</p>
-          <ul className="mt-4 space-y-3">
-            {data.last60DaysIncome&&data.last60DaysIncome.transaction.length === 0 ? (
-              <p className="text-sm opacity-70">No income</p>
-            ) : (
-              data.last60DaysIncome&&data.last60DaysIncome.transaction.map((txn, idx) => (
-                <li
-                  key={idx}
-                  className={`${!darkMode ? "bg-gray-100 text-black" : "bg-gray-700 text-white"} p-3 rounded-lg flex items-center justify-between`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="text-2xl">{txn.icon}</div>
-                    <div className="flex flex-col">
-                      <span className="font-semibold capitalize">{txn.category || txn.source}</span>
-                      <span className="text-xs opacity-70">{txn.date && new Date(txn.date).toLocaleString()}</span>
-                    </div>
-                  </div>
-                  <div className="font-bold text-green-500">+ ₹ {txn.amount}</div>
-                </li>
-              ))
-            )}
-          </ul>
+          <div className="flex items-center gap-2">
+            <ImageIcon size={20}/> Upload / Change Profile Picture (Cloudinary)
+          </div>
         </div>
-      </div>
 
-      {/* Recent Transactions */}
-      <div className={`${cardStyle}`}>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Recent Transactions</h2>
-          <button className="text-sm text-blue-500 hover:underline">See All</button>
+        {/* Swagger Documentation */}
+        <div className={cardStyle}>
+          <h2 className={sectionTitle}>📚 API Documentation</h2>
+          <div className="flex items-center gap-2 mb-2">
+            <FileText size={20}/> Fully documented using Swagger UI
+          </div>
+          <p className="opacity-80">Includes Endpoints for Auth, Expense, Income & Profile APIs.</p>
         </div>
-        {data.recentTransaction&&data.recentTransaction.length === 0 ? (
-          <p className="text-sm opacity-70">No recent transactions</p>
-        ) : (
-          <ul className="space-y-3">
-            {data.recentTransaction&&data.recentTransaction.map((txn) => (
-              <li
-                key={txn._id}
-                className={`${!darkMode ? "bg-gray-100 text-black" : "bg-gray-700 text-white"} flex items-center justify-between p-3 rounded-lg shadow-sm`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="text-2xl">{txn.icon}</div>
-                  <div className="flex flex-col leading-tight">
-                    <span className="font-semibold text-base capitalize">{txn.category || txn.source}</span>
-                    <span className="text-xs opacity-70">{txn.date && new Date(txn.date).toLocaleString()}</span>
-                  </div>
-                </div>
-                <div className={`font-bold ${txn.type === "income" ? "text-green-500" : "text-red-500"}`}>
-                  {txn.type === "income" ? "+ ₹" : "- ₹"}{txn.amount}
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+
+        {/* Technology */}
+        <div className={cardStyle}>
+          <h2 className={sectionTitle}>🛠 Technology Stack</h2>
+          <div className="flex items-center gap-2 mb-2">
+            <Server size={20}/> Node.js + Express + TypeScript (Backend)
+          </div>
+          <div className="flex items-center gap-2 mb-2">
+            <LayoutDashboard size={20}/> React + TypeScript + Tailwind (Frontend)
+          </div>
+          <p className="opacity-80">
+            Includes JWT Authentication, Zustand Store, Axios Interceptors, and Recharts visualizations.
+          </p>
+        </div>
+
       </div>
     </div>
   );
