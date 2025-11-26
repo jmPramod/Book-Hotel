@@ -28,7 +28,7 @@ interface UpdatePayload {
   state?: string;
   country?: string;
   pinCode?: number;
-  avatar?: string; // if uploading image
+  avatar?: string;
 }
 
 interface UserState {
@@ -38,7 +38,6 @@ interface UserState {
   setUser: (user: User | null) => void;
   logout: () => void;
   setLoading: (loading: boolean) => void;
-
 
   darkMode: boolean;
   toggleDarkMode: () => void;
@@ -54,19 +53,10 @@ export const useUserStore = create<UserState>()(
       user: null,
       loading: false,
       setLoading: (loading) => set({ loading }),
-
-
-      // Dark Mode
       darkMode: true,
       toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
-
-      // Set User
       setUser: (user) => set({ user }),
-
-      // Logout
       logout: () => set({ user: null }),
-
-      // LOGIN API CALL
       login: async (body) => {
         try {
           set({ loading: true });
@@ -82,8 +72,6 @@ export const useUserStore = create<UserState>()(
           set({ loading: false });
         }
       },
-
-      // REGISTER API CALL
       register: async (body) => {
         try {
           set({ loading: true });
@@ -99,8 +87,6 @@ export const useUserStore = create<UserState>()(
           set({ loading: false });
         }
       },
-
-      // ⭐ UPDATE USER API CALL
       updateUser: async (payload: UpdatePayload | FormData, id: string) => {
         try {
           set({ loading: true });
@@ -108,7 +94,6 @@ export const useUserStore = create<UserState>()(
           const res = await updateProfile(payload, id);
 
           if (res.status === 200 || res.status === 200) {
-            // merge updated fields into current user
             const currentUser = get().user;
             const updatedUser = { ...currentUser, ...res.data };
 

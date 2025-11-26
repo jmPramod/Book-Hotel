@@ -19,10 +19,8 @@ const fadeInput = {
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
    const { darkMode, loading } = useUserStore();
- // ✅ Dark mode state
   const navigate = useNavigate();
    const register = useUserStore((state) => state.register);
-  // const loading = useUserStore((state) => state.loading);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -53,17 +51,10 @@ const Register = () => {
       toast.error(err.message || "Something went wrong!");
     }
   };
-  // if(loading){
-  //   return <Loading/>
-  // }
-
+   
   return (
     <div className={`${darkMode ? "bg-slate-900 text-white" : "bg-gray-100 text-gray-900"} min-h-[90vh] flex flex-col-reverse md:flex-row overflow-hidden`}>
-   
-
-   
-      {/* RIGHT FORM */}
-      <motion.div
+       <motion.div
         initial={{ y: 120, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1 }}
@@ -80,8 +71,7 @@ const Register = () => {
           </motion.h2>
 
           <form className="space-y-6 p-3 md:p-0" onSubmit={handleSubmit}>
-            {/* FIRST + LAST NAME */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <motion.div custom={0} variants={fadeInput} initial="hidden" animate="visible">
                 <label className="text-sm">First Name</label>
                 <div className={`${darkMode ? "bg-slate-800" : "bg-white"} flex items-center gap-2 mt-1 rounded-xl px-4 py-3`}>
@@ -112,9 +102,7 @@ const Register = () => {
                 </div>
               </motion.div>
             </div>
-
-            {/* PHONE */}
-            <motion.div custom={2} variants={fadeInput} initial="hidden" animate="visible">
+        <motion.div custom={2} variants={fadeInput} initial="hidden" animate="visible">
               <label className="text-sm">Phone Number</label>
               <div className={`${darkMode ? "bg-slate-800" : "bg-white"} flex items-center gap-2 mt-1 rounded-xl px-4 py-3`}>
                 <Phone size={20} className={`${darkMode ? "text-gray-400" : "text-gray-500"}`} />
@@ -128,8 +116,6 @@ const Register = () => {
                 />
               </div>
             </motion.div>
-
-            {/* EMAIL */}
             <motion.div custom={7} variants={fadeInput} initial="hidden" animate="visible">
               <label className="text-sm">Email Address</label>
               <div className={`${darkMode ? "bg-slate-800" : "bg-white"} flex items-center gap-2 mt-1 rounded-xl px-4 py-3`}>
@@ -144,8 +130,6 @@ const Register = () => {
                 />
               </div>
             </motion.div>
-
-            {/* PASSWORD */}
             <motion.div custom={8} variants={fadeInput} initial="hidden" animate="visible">
               <label className="text-sm">Password</label>
               <div className={`${darkMode ? "bg-slate-800" : "bg-white"} flex items-center gap-2 mt-1 rounded-xl px-4 py-3`}>
@@ -165,8 +149,6 @@ const Register = () => {
                 )}
               </div>
             </motion.div>
-
-            {/* BUTTON */}
             <motion.button
               custom={9}
               variants={fadeInput}
@@ -179,8 +161,6 @@ const Register = () => {
             >
          {loading?"Loading...":"Register"     }
             </motion.button>
-
-            {/* LOGIN */}
             <motion.p
               custom={10}
               variants={fadeInput}
@@ -196,8 +176,6 @@ const Register = () => {
           </form>
         </div>
       </motion.div>
-
-         {/* LEFT IMAGE */}
       <motion.div
         initial={{ y: -120, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}

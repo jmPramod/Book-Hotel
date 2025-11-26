@@ -18,18 +18,15 @@ country: user?.data?.country || "",
 pinCode: user?.data?.pinCode || "",
 email: user?.data?.email || "",
 profileImage: user?.data?.profileImage?.imageUrl || "",
-profileFile: null as File | null, // store the actual file
-});
-
-// Handle text input
+profileFile: null as File | null,  
+}); 
 const handleChange = (e: any) => {
 setFormData({
 ...formData,
 [e.target.name]: e.target.value,
 });
 };
-
-// Handle Image Upload
+ 
 const handleImageChange = (e: any) => {
 const file = e.target.files[0];
 if (!file) return;
@@ -44,8 +41,7 @@ setFormData({
 
 
 };
-
-// Handle Save
+ 
 const handleSave = async () => {
 const form = new FormData();
 
@@ -69,7 +65,7 @@ const response = await updateUser(form,user.data._id)
 
  
   const data = response.data
-  setUser(data); // Update user in store
+  setUser(data); 
   setIsEditing(false);
 }
   
@@ -81,7 +77,7 @@ const response = await updateUser(form,user.data._id)
 
 };
 
-// Handle Cancel
+ 
 const handleCancel = () => {
 setIsEditing(false);
 setFormData({
@@ -104,8 +100,8 @@ className={`w-full mx-auto p-8 mt-4 rounded-xl shadow-lg transition ${
         darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
       }`}
 >
-{/* Profile Header */} <div className="flex flex-col items-center gap-4">
-{/* Profile Image Container */} <div className="relative cursor-pointer">
+ <div className="flex flex-col items-center gap-4">
+ <div className="relative cursor-pointer">
 <img
 src={formData.profileImage}
 alt="Profile"
@@ -146,9 +142,8 @@ className="w-28 h-28 rounded-full border object-cover"
     )}
   </div>
 
-  {/* FORM */}
-  <div className="mt-10 space-y-10">
-    {/* Row 1 – First + Last Name */}
+ 
+  <div className="mt-10 space-y-10"> 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <label className="font-medium">First Name</label>
@@ -182,8 +177,7 @@ className="w-28 h-28 rounded-full border object-cover"
         />
       </div>
     </div>
-
-    {/* Row 2 – Email + Phone */}
+ 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <label className="font-medium">Email</label>
@@ -217,8 +211,7 @@ className="w-28 h-28 rounded-full border object-cover"
         />
       </div>
     </div>
-
-    {/* Row 3 – Address + State */}
+ 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <label className="font-medium">Address</label>
@@ -252,8 +245,7 @@ className="w-28 h-28 rounded-full border object-cover"
         />
       </div>
     </div>
-
-    {/* Row 4 – Country + Pin Code */}
+ 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <label className="font-medium">Country</label>
@@ -288,8 +280,7 @@ className="w-28 h-28 rounded-full border object-cover"
       </div>
     </div>
   </div>
-
-  {/* Save | Cancel Buttons */}
+ 
   {isEditing && (
     <div className="flex gap-4 mt-10">
       <button

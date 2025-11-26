@@ -1,5 +1,4 @@
-// src/types/User.ts
-
+ 
 export interface ProfileImage {
   imageUrl: string;
   imgPublicId: string | null;

@@ -21,14 +21,12 @@ const { darkMode, setLoading } = useUserStore();
 const [expense, setExpense] = useState<ExpenseEntry[]>([]);
 const [modalOpen, setModalOpen] = useState(false);
 const [editData, setEditData] = useState<ExpenseEntry | null>(null);
-
-// Pagination & Search
+ 
 const [page, setPage] = useState(1);
 const [limit] = useState(10);
 const [pagination, setPagination] = useState({ totalItems: 0, totalPages: 1 });
 const [search, setSearch] = useState("");
-
-// Fetch Expense
+ 
 const fetchExpense = async (searchTerm = search) => {
 setLoading(true);
 try {
@@ -40,12 +38,11 @@ console.log("Error fetching expense:", error);
 }
 setLoading(false);
 };
-
-// Debounced search function
+ 
 const debouncedSearch = useMemo(
 () =>
 debounce((value: string) => {
-setPage(1); // reset to first page on new search
+setPage(1);  
 fetchExpense(value);
 }, 500),
 []
@@ -54,7 +51,7 @@ fetchExpense(value);
 useEffect(() => {
 fetchExpense();
 return () => {
-debouncedSearch.cancel(); // cleanup debounce on unmount
+debouncedSearch.cancel(); 
 };
 }, [page]);
 
@@ -62,8 +59,7 @@ const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 setSearch(e.target.value);
 debouncedSearch(e.target.value);
 };
-
-// ADD Expense
+ 
 const handleAdd = async (data: any) => {
 setLoading(true);
 try {
@@ -74,8 +70,7 @@ console.log("Error adding expense:", error);
 }
 setLoading(false);
 };
-
-// UPDATE Expense
+ 
 const handleUpdate = async (data: any) => {
 if (!editData?._id) return;
 setLoading(true);
@@ -88,8 +83,7 @@ console.log("Error updating expense:", error);
 setLoading(false);
 setEditData(null);
 };
-
-// DELETE Expense
+ 
 const handleDelete = async (id: string) => {
 setLoading(true);
 try {
@@ -100,8 +94,7 @@ console.log("Error deleting expense:", error);
 }
 setLoading(false);
 };
-
-// Download Excel
+ 
 const downloadExcel = async () => {
 try {
 const res = await downloadExcelExpense();
@@ -122,7 +115,7 @@ console.error("Excel download failed", error);
 };
 
 return ( <div className="p-4 flex flex-col gap-4">
-{/* Header Buttons */} <div className="flex justify-between items-center gap-4">
+  <div className="flex justify-between items-center gap-4">
 <button
 onClick={() => {
 setEditData(null);
@@ -141,7 +134,7 @@ className="px-4 py-2 bg-red-600 text-white rounded-lg"
     </button>
   </div>
 
-  {/* Search */}
+ 
   <div className="flex justify-end mb-2">
     <input
       type="text"
@@ -152,10 +145,10 @@ className="px-4 py-2 bg-red-600 text-white rounded-lg"
     />
   </div>
 
-  {/* Line Chart */}
+   
   <ExpenseLineChart expense={expense} darkMode={darkMode} />
 
-  {/* Expense Table */}
+ 
   <ExpenseTable
     expense={expense}
     onEdit={(data: ExpenseEntry) => {
@@ -166,7 +159,7 @@ className="px-4 py-2 bg-red-600 text-white rounded-lg"
     darkMode={darkMode}
   />
 
-  {/* Pagination */}
+   
   <div className="flex justify-center items-center gap-4 mt-4">
     <button
       onClick={() => setPage((prev) => prev - 1)}
@@ -189,7 +182,7 @@ className="px-4 py-2 bg-red-600 text-white rounded-lg"
     </button>
   </div>
 
-  {/* Modal */}
+ 
   {modalOpen && (
     <ExpenseModal
       close={() => setModalOpen(false)}

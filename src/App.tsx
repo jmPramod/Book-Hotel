@@ -6,9 +6,8 @@ import Navbar from "./components/Navbar/Navbar.tsx";
 import Expense from "./pages/Expense/Expense.tsx";
 
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // <- Import styles
-// import Home from "./pages/Home/Home.tsx";
-// import Profile from "./pages/Profile/Profile.tsx";
+import "react-toastify/dist/ReactToastify.css"; 
+ 
 const Home = lazy(() => import("./pages/Home/Home"));
 
 const Profile = lazy(() => import( "./pages/Profile/Profile"));
@@ -39,8 +38,7 @@ function App() {
           </Route>
         </Routes>
       </Suspense>
-
-      {/* Toast Container at top-level */}
+ 
       <ToastContainer
         position="top-right"
         autoClose={3000}

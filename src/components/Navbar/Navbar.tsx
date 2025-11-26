@@ -1,29 +1,15 @@
-// import { useEffect, useState } from 'react';
-import { Outlet, useLocation, Link } from 'react-router-dom';
+ import { Outlet, useLocation, Link } from 'react-router-dom';
 import { Sun, Moon } from 'lucide-react';
 import { useUserStore } from '../../store/useUserStore';
 import SideMenu from '../SideMenu/SideMenu';
 
 const Navbar = () => {
-  // const [visible, setVisible] = useState(false);
-  // const [darkMode, setDarkMode] = useState(true); // default dark mode
-  const location = useLocation();
+    const location = useLocation();
     const { darkMode, toggleDarkMode } = useUserStore();
   const user = useUserStore((state) => state.user);
 const logout = useUserStore((state) => state.logout);
 
-  
-  // useEffect(() => {
-  //   if (location && location.pathname === '/sign-up'||location.pathname === '/login') {
-  //     setVisible(true);
-  //   } else {
-  //     setVisible(false);
-  //   }
-  // }, [location]);
-
-  // if (visible) {
-  //   return <Outlet />;
-  // }
+   
 
   return (
     <>
@@ -58,9 +44,7 @@ const logout = useUserStore((state) => state.logout);
    
             }
           </li>
-             </ul>
-
-        {/* Dark mode toggle */}
+             </ul> 
         <button
           onClick={toggleDarkMode}
           className="ml-4 p-2 rounded-full hover:bg-gray-700 transition"

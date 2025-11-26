@@ -127,8 +127,8 @@ export const fetchallIncome = async (page = 1, limit = 10, search = "") => {
       status: res?.status,
       statusCode: res?.data?.statusCode,
       message: res?.data.message,
-      data: res?.data?.data?.data, // income array
-      pagination: res?.data?.data?.pagination, // pagination
+      data: res?.data?.data?.data, 
+      pagination: res?.data?.data?.pagination,  
     };
   } catch (error: any) {
     console.log("error", error);
@@ -151,8 +151,8 @@ export const fetchallExpense= async (page = 1, limit = 10, search = "") => {
       status: res?.status,
       statusCode: res?.data?.statusCode,
       message: res?.data.message,
-      data: res?.data?.data?.data, // income array
-      pagination: res?.data?.data?.pagination, // pagination
+      data: res?.data?.data?.data,  
+      pagination: res?.data?.data?.pagination,  
     };
   } catch (error: any) {
     console.log("error", error);

@@ -17,8 +17,7 @@ const fadeInput = {
 };
 
 const Login = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  // const [darkMode, setDarkMode] = useState(true);
+  const [showPassword, setShowPassword] = useState(false); 
     const { darkMode, loading } = useUserStore();
   const login = useUserStore((state) => state.login);
 
@@ -43,17 +42,15 @@ const Login = () => {
         localStorage.setItem("token", res.token.accessToken);
       }
       if (res.status === 200 || res.status === 200) {
-       console.log("1");
+      
        
        navigate("/dashboard");
         toast.success("Registration successful!");
       } else if (res.status >= 400) {
-           console.log("2");
+        
         toast.error(res.message || "Something went wrong!");
-      }
-         console.log("3");
-    } catch (err: any) {
-         console.log("4");
+      } 
+    } catch (err: any) { 
       toast.error(err.message || "Something went wrong!");
     }
   };
@@ -63,17 +60,8 @@ const Login = () => {
       className={`${
         darkMode ? "bg-slate-900 text-white" : "bg-gray-100 text-gray-900"
       } flex flex-col md:flex-row overflow-hidden`}
-      style={{ height: "calc(100vh - 68px)" }} // ⭐ Fix for no scroll under navbar
-    >
-      {/* THEME TOGGLE BUTTON */}
-      {/* <button
-        onClick={() => setDarkMode(!darkMode)}
-        className="absolute top-5 right-5 p-2 rounded-full bg-gray-700 text-white hover:scale-105 transition"
-      >
-        {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-      </button> */}
-
-      {/* LEFT IMAGE */}
+      style={{ height: "calc(100vh - 68px)" }} >
+       
       <motion.div
         initial={{ y: -120, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -81,8 +69,7 @@ const Login = () => {
         className="w-full md:w-1/2 h-60 md:h-full bg-contain bg-center bg-no-repeat object-contain"
         style={{ backgroundImage: `url(${signupImg})` }}
       ></motion.div>
-
-      {/* RIGHT FORM */}
+ 
       <motion.div
         initial={{ y: 120, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -100,7 +87,7 @@ const Login = () => {
           </motion.h2>
 
           <form className="space-y-6 p-3 md:p-0" onSubmit={handleSubmit}>
-            {/* EMAIL */}
+          
             <motion.div custom={7} variants={fadeInput} initial="hidden" animate="visible">
               <label className="text-sm">Email Address</label>
               <div
@@ -119,8 +106,7 @@ const Login = () => {
                 />
               </div>
             </motion.div>
-
-            {/* PASSWORD */}
+ 
             <motion.div custom={8} variants={fadeInput} initial="hidden" animate="visible">
               <label className="text-sm">Password</label>
               <div
@@ -145,7 +131,7 @@ const Login = () => {
               </div>
             </motion.div>
 
-            {/* BUTTON */}
+           
             <motion.button
               custom={9}
               variants={fadeInput}
@@ -158,8 +144,7 @@ const Login = () => {
             >{
               loading?"Loading...":"Login"
            } </motion.button>
-
-            {/* LOGIN LINK */}
+ 
             <motion.p
               custom={10}
               variants={fadeInput}
