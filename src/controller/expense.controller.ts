@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import createError from "../utils/createError";
-import xlsx from 'xlsx'
-import IncomeSchema   from "../Models/icome.models";
+import xlsx from 'xlsx' 
 import { ApiResponse } from "../utils/ApiResponse";
 import ExpenseSchema from "../Models/expense.models";
 export const addExpenseController=async (req: Request, res: Response, next: NextFunction) => {
@@ -22,11 +21,11 @@ await newExpense.save()
       
 
    res
-      .status(201)
+      .status(200)
       .json(
         new ApiResponse(
-          201,
-          { expense:newExpense   },
+          200,
+          { data:newExpense   },
           "Expense Created successfully"
         )
       );
@@ -39,6 +38,47 @@ await newExpense.save()
 
 }
 
+export const updateExpenseController=async (req: Request, res: Response, next: NextFunction) => {
+ const userId=req.user_info.userId
+try {
+     const userId = req.user_info.userId;
+    const expenseId = req.params.id; // get ID from URL
+
+    const { icon, category, amount, date } = req.body;
+
+    // Validate
+    if (!expenseId) {
+      return res.status(400).json({ message: "Expense ID is required" });
+    }
+
+    const updatedExpense = await ExpenseSchema.findOneAndUpdate(
+      { _id: expenseId, userId }, // ensure the user owns the expense
+      { icon, category, amount, date },
+      { new: true } // return updated document
+    );
+
+    if (!updatedExpense) {
+      // return res.status(404).json({ message: "Expense not found" });
+      return createError(404,"Expense not found" )
+    }
+
+   res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { data:updatedExpense   },
+          "Expense Updated successfully"
+        )
+      );
+
+} catch (error) {
+    next(error)
+    
+}
+
+
+}
 export const getExpenseController=async (req: Request, res: Response, next: NextFunction) => {
 try {
   const userId=req.user_info.userId
@@ -49,11 +89,11 @@ try {
   createError(401,'No expense created')
 }
    res
-      .status(201)
+      .status(200)
       .json(
         new ApiResponse(
-          201,
-          { expense:expense   },
+          200,
+          { data:expense   },
           "Expense Fetched successfully"
         )
       );
@@ -94,11 +134,11 @@ try {
   
  
    res
-      .status(201)
+      .status(200)
       .json(
         new ApiResponse(
-          201,
-          { expense:expense   },
+          200,
+          { data:expense   },
           "expense Deleted successfully"
         )
       );

@@ -5,6 +5,32 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { ApiResponse } from "../utils/ApiResponse";
 
+import { v2 as cloudinary } from "cloudinary";
+// import { cloudinaryImage } from "../middlewears/cloudinary.middlewear";
+const uploadToCloudinary = (fileBuffer: Buffer, folder: string) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder,
+        transformation: [
+          { width: 800, height: 600, crop: "limit" },
+          { quality: "auto" },
+          { fetch_format: "auto" }
+        ],
+      },
+      (err, result) => {
+        if (err) reject(err);
+        else resolve(result);
+      }
+    );
+    stream.end(fileBuffer);
+  });
+};
+
+interface ExistingImages {
+  imageUrl: string;
+  imgPublicId: string;
+}
 /**
  * Generate Access Token
  * @param {Object} user - User object (Admin, user,)
@@ -86,13 +112,13 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
     const accessToken = generateAccessToken(user, user.isAdmin);
     const refreshToken = generateRefreshToken(user, user.isAdmin);
 
-    //201 → Created
+    //200 → Created
     res
-      .status(201)
+      .status(200)
       .json(
         new ApiResponse(
-          201,
-          { user: userResponse, token:{accessToken, refreshToken} },
+          200,
+          { data: userResponse, tokens:{accessToken, refreshToken} },
           "User registered successfully"
         )
       );
@@ -136,7 +162,7 @@ const login=async(req: Request, res: Response, next: NextFunction)=>{
       .json(
         new ApiResponse(
           200,
-          { user: userResponse,tokens:{ accessToken, refreshToken} },
+          { data: userResponse,tokens:{ accessToken, refreshToken} },
           "User Logged in successfully"
         )
       );
@@ -144,4 +170,92 @@ const login=async(req: Request, res: Response, next: NextFunction)=>{
     next(error)
   }
 }
-export { register,login };
+ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const oldUser: any = await Auth.findById(req.params.id);
+
+    if (!oldUser  ) {
+      return next(createError(404, "User not found"));
+    }
+
+    // ---------------------------------------------------
+    // IMAGE UPLOAD HANDLING
+    // ---------------------------------------------------
+    console.log("req.file",req.file);
+    
+    if (req.file) {
+      console.log("New file received");
+
+      // Upload new image to Cloudinary
+      const uploaded: any = await uploadToCloudinary(
+        req.file.buffer,
+        "ProfileExpenceImage"
+      );
+
+      const newImage = {
+        imageUrl: uploaded.secure_url,
+        imgPublicId: uploaded.public_id,
+      };
+
+      // Delete old image if exists
+      if (oldUser.profileImage?.imgPublicId) {
+        try {
+          const del = await cloudinary.uploader.destroy(oldUser.profileImage.imgPublicId);
+          console.log("Old image deleted:", del);
+        } catch (error) {
+          console.error("Error deleting old image:", error);
+        }
+      }
+console.log("newImage",newImage);
+
+      req.body.profileImage = newImage;
+    }
+
+    // ---------------------------------------------------
+    // PASSWORD UPDATE
+    // ---------------------------------------------------
+    if (req.body.password) {
+      const isPasswordValid = await bcrypt.compare(
+        req.body.password,
+        oldUser.password
+      );
+
+      if (!isPasswordValid) {
+        return next(createError(400, "Your previous password is incorrect"));
+      }
+
+      req.body.password = await bcrypt.hash(req.body.password, 10);
+    }
+
+    // ---------------------------------------------------
+    // UPDATE USER DATA
+    // ---------------------------------------------------
+    const user = await Auth.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true }
+    );
+    let accessToken
+    let refreshToken
+    if(user){
+
+      accessToken  = generateAccessToken(user, user.isAdmin);
+    refreshToken = generateRefreshToken(user, user.isAdmin);
+    }
+
+ res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { data: user, tokens:{accessToken, refreshToken} },
+          "User Updated successfully"
+        )
+      );
+  
+  } catch (error) {
+    console.log("updateUser error:", error);
+    next(error);
+  }
+};
+export { register,login,updateUser };

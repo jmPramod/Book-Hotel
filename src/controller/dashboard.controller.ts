@@ -61,7 +61,8 @@ export const getDashboardController = async (req: Request, res: Response, next: 
       new ApiResponse(
         200,
         {
-          totalBalance: totalIncome - totalExpense,
+        data:{
+           totalBalance: totalIncome - totalExpense,
           totalIncome,
           totalExpense,
           last30DaysExpense: {
@@ -73,7 +74,8 @@ export const getDashboardController = async (req: Request, res: Response, next: 
             transaction: last60DaysIncomeTransaction
           },
           recentTransaction
-        },
+       
+        }  },
         "Dashboard info fetched successfully"
       )
     );

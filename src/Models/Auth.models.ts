@@ -4,7 +4,7 @@ export interface Auth extends Document {
   name: string;
   firstName: string;
   lastName: string;
-  phone: number;
+  phone: string;
   address: string;
   state: string;
   country: string;
@@ -23,7 +23,7 @@ const authSchema: Schema = new Schema(
   {
     firstName: { type: String },
     lastName: { type: String },
-    phone: { type: Number },
+    phone: { type: String },
     address: { type: String },
     state: { type: String },
     country: { type: String },
@@ -43,8 +43,39 @@ const authSchema: Schema = new Schema(
 );
 
 export default mongoose.model<Auth>("users", authSchema);
-
 export const RegisterSchemaValidation = Joi.object({
+  firstName: Joi.string().required().messages({
+    "any.required": "First name is required.",
+    "string.empty": "First name cannot be empty.",
+  }),
+  lastName: Joi.string().allow(null, "").optional(),
+  phone: Joi.number().required().messages({
+    "any.required": "Phone number is required.",
+    "number.base": "Phone number must be a number.",
+    "number.empty": "Phone number cannot be empty.",
+  }),
+  address: Joi.string().allow(null, "").optional(),
+  state: Joi.string().allow(null, "").optional(),
+  country: Joi.string().allow(null, "").optional(),
+  pinCode: Joi.number().allow(null, "").optional(),
+  email: Joi.string().email().required().messages({
+    "any.required": "Email is required.",
+    "string.empty": "Email cannot be empty.",
+    "string.email": "Email must be a valid email address.",
+  }),
+  password: Joi.string().required().messages({
+    "any.required": "Password is required.",
+    "string.empty": "Password cannot be empty.",
+  }),
+  isAdmin: Joi.string().valid("admin", "user").default("user"),
+ profileImage: Joi.object({
+    imageUrl: Joi.string().uri().default(
+      "https://res.cloudinary.com/dtvq8ysaj/image/upload/v1720770108/Global%20Images/profile_new-removebg-preview_motz7n.png"
+    ),
+    imgPublicId: Joi.string().allow(null).default(null)
+  }).default({})
+});
+export const ProfileUpdateSchemaValidation = Joi.object({
   firstName: Joi.string().required().messages({
     "any.required": "First name is required.",
     "string.empty": "First name cannot be empty.",
