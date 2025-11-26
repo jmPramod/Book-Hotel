@@ -24,7 +24,7 @@ const whitelist = [
   process.env.CLIENT_URL,
   "http://localhost:5173",
   "http://localhost:4500",
-  "https://book-hotel-n3ht.vercel.app",
+  'https://book-room-hotel.netlify.app/'
 ];
 
 const runServer = async () => {
