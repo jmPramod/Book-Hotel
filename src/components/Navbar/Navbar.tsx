@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 import { Outlet, useLocation, Link } from 'react-router-dom';
 import { Sun, Moon } from 'lucide-react';
 import { useUserStore } from '../../store/useUserStore';
+import SideMenu from '../SideMenu/SideMenu';
 
 const Navbar = () => {
-  const [visible, setVisible] = useState(false);
+  // const [visible, setVisible] = useState(false);
   // const [darkMode, setDarkMode] = useState(true); // default dark mode
   const location = useLocation();
     const { darkMode, toggleDarkMode } = useUserStore();
@@ -12,23 +13,23 @@ const Navbar = () => {
 const logout = useUserStore((state) => state.logout);
 
   
-  useEffect(() => {
-    if (location && location.pathname === '/sign-up') {
-      setVisible(true);
-    } else {
-      setVisible(false);
-    }
-  }, [location]);
+  // useEffect(() => {
+  //   if (location && location.pathname === '/sign-up'||location.pathname === '/login') {
+  //     setVisible(true);
+  //   } else {
+  //     setVisible(false);
+  //   }
+  // }, [location]);
 
-  if (visible) {
-    return <Outlet />;
-  }
+  // if (visible) {
+  //   return <Outlet />;
+  // }
 
   return (
     <>
       <nav className={`w-full px-6 py-4 flex justify-between items-center ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'} shadow-md`}>
         <div className="text-xl font-bold">
-          <Link to="/">MyApp</Link>
+          <Link to="/">Money Tracker</Link>
         </div>
 
         <ul className="hidden md:flex space-x-6">
@@ -48,7 +49,12 @@ const logout = useUserStore((state) => state.logout);
 !user?
     <Link to="/login" className="hover:text-indigo-400 transition">Sign Up</Link>
         :
-            <div  onClick={logout} className="hover:text-indigo-400 transition">Logout</div>
+            <div  onClick={()=>{
+                   localStorage.removeItem("token");
+  
+              logout()
+
+            }} className="hover:text-indigo-400 transition">Logout</div>
    
             }
           </li>
@@ -56,14 +62,15 @@ const logout = useUserStore((state) => state.logout);
 
         {/* Dark mode toggle */}
         <button
-          onClick={() => toggleDarkMode ()}
+          onClick={toggleDarkMode}
           className="ml-4 p-2 rounded-full hover:bg-gray-700 transition"
-        >
+        > 
           {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
         </button>
       </nav>
+    {user&&  <SideMenu/>}
 
-      <Outlet />
+   {(location.pathname === '/sign-up'||location.pathname === '/login')&&<Outlet />}
     </>
   );
 };

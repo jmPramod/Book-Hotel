@@ -1,8 +1,7 @@
 import type { User } from "../types/User";
-import { loginApi, registerApi } from "../utils/Api.services";
+import { loginApi, registerApi, updateProfile } from "../utils/Api.services";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-// import { User } from "../types/User";
 
 interface LoginPayload {
   email: string;
@@ -21,47 +20,57 @@ interface RegisterPayload {
   pinCode?: number;
 }
 
+interface UpdatePayload {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  address?: string;
+  state?: string;
+  country?: string;
+  pinCode?: number;
+  avatar?: string; // if uploading image
+}
+
 interface UserState {
   user: User | null;
   loading: boolean;
 
   setUser: (user: User | null) => void;
   logout: () => void;
-   darkMode: boolean;
-   
+
+  darkMode: boolean;
   toggleDarkMode: () => void;
 
   login: (body: LoginPayload) => Promise<any>;
   register: (body: RegisterPayload) => Promise<any>;
+  updateUser: (payload: UpdatePayload | FormData, id: string) => Promise<any>;
 }
 
 export const useUserStore = create<UserState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       loading: false,
-  darkMode: true,
-      toggleDarkMode: () =>
-        set((state) => ({ darkMode: !state.darkMode })),
-      setDarkMode: (value: boolean) =>
-        set({ darkMode: value }),
 
+      // Dark Mode
+      darkMode: true,
+      toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
+
+      // Set User
       setUser: (user) => set({ user }),
+
+      // Logout
       logout: () => set({ user: null }),
 
-      // ----------------------
-      // LOGIN
-      // ----------------------
+      // LOGIN API CALL
       login: async (body) => {
         try {
           set({ loading: true });
 
-          const res = await loginApi(body)
- 
-          console.log("res.data.data ",res );
-         if (res.status === 201 || res.status === 200) {
-        
-            set({ user: res.data.data as User });
+          const res = await loginApi(body);
+
+          if (res.status === 200 || res.status === 200) {
+            set({ user: res.data as User });
           }
 
           return res;
@@ -70,29 +79,46 @@ export const useUserStore = create<UserState>()(
         }
       },
 
-      // ----------------------
-      // REGISTER (save to local storage)
-      // ----------------------
+      // REGISTER API CALL
       register: async (body) => {
         try {
           set({ loading: true });
 
-          const result = await  registerApi(body)
+          const res = await registerApi(body);
 
-      
-        if (result.status === 201 || result.status === 200) {
-          // Save user in Zustand + localStorage
-            set({ user: result.data as User });
+          if (res.status === 200 || res.status === 200) {
+            set({ user: res.data as User });
           }
 
-          return result;
+          return res;
+        } finally {
+          set({ loading: false });
+        }
+      },
+
+      // ⭐ UPDATE USER API CALL
+      updateUser: async (payload: UpdatePayload | FormData, id: string) => {
+        try {
+          set({ loading: true });
+
+          const res = await updateProfile(payload, id);
+
+          if (res.status === 200 || res.status === 200) {
+            // merge updated fields into current user
+            const currentUser = get().user;
+            const updatedUser = { ...currentUser, ...res.data };
+
+            set({ user: updatedUser as User });
+          }
+
+          return res;
         } finally {
           set({ loading: false });
         }
       },
     }),
     {
-      name: "user-store", // localStorage key
+      name: "user-store",
     }
   )
 );

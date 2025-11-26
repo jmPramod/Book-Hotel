@@ -1,13 +1,15 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense } from "react";
 import "./App.css";
-import { Route, Routes, useNavigate } from "react-router";
+import { Route, Routes } from "react-router";
 import Loading from "./components/Loading/Loading.tsx";
 import Navbar from "./components/Navbar/Navbar.tsx";
 import Expense from "./pages/Expense/Expense.tsx";
 
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // <- Import styles
+// import Profile from "./pages/Profile/Profile.tsx";
 
+const Profile = lazy(() => import( "./pages/Profile/Profile"));
 const Home = lazy(() => import("./pages/Home/Home"));
 const Login = lazy(() => import("./pages/Login/Login.tsx"));
 const Income = lazy(() => import("./pages/Income/Income.tsx"));
@@ -26,6 +28,8 @@ function App() {
             <Route path="/sign-up" element={<Register />} />
             <Route path="/expense" element={<Expense />} />
             <Route path="/dashboard" element={<Home />} />
+            
+            <Route path="/profile" element={<Profile />} />
           </Route>
         </Routes>
       </Suspense>

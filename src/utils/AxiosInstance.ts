@@ -19,10 +19,25 @@ const AxiosInstance=axios.create({
 
 AxiosInstance.interceptors.request.use(
     (config)=>{
-        const accessToken=localStorage.getItem('token')
-        if(accessToken){
-            config.headers.Authorization=`Bearer ${accessToken}`
-        }
+        // const accessToken=localStorage.getItem('user-store')
+        
+        // if(accessToken){
+        //     let token=JSON.parse(accessToken)
+        //     config.headers.Authorization=`Bearer ${token.tokens.accessToken}`
+        // }
+
+           const raw = localStorage.getItem("user-store");
+
+    if (raw) {
+      const parsed = JSON.parse(raw);
+
+      // Zustand persisted structure: parsed.state.user.tokens.accessToken
+      const accessToken = parsed?.state?.user?.tokens?.accessToken;
+
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
+    }
         return config
     },
     (error)=>{

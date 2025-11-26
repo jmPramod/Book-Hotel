@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, Mail, User, Lock, Phone, Sun, Moon } from "lucide-react";
-import signupImg from "../../assets/Signup.png";
-import { registerApi } from "../../utils/Api.services";
+import { Eye, EyeOff, Mail, User, Lock, Phone,  } from "lucide-react";
+import signupImg from "../../assets/Signup.png"; 
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -20,7 +19,7 @@ const fadeInput = {
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [darkMode, setDarkMode] = useState(true); // ✅ Dark mode state
+  const [darkMode] = useState(true); // ✅ Dark mode state
   const navigate = useNavigate();
    const register = useUserStore((state) => state.register);
   const loading = useUserStore((state) => state.loading);

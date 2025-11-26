@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, Mail, User, Lock, Phone, Sun, Moon } from "lucide-react";
-import signupImg from "../../assets/Signup.png";
-import { loginApi } from "../../utils/Api.services";
+import { Eye, EyeOff, Mail, Lock,  } from "lucide-react";
+import signupImg from "../../assets/Signup.png"; 
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -43,7 +42,7 @@ const Login = () => {
       if (res.token) {
         localStorage.setItem("token", res.token.accessToken);
       }
-      if (res.status === 201 || res.status === 200) {
+      if (res.status === 200 || res.status === 200) {
        console.log("1");
        
        navigate("/dashboard");
@@ -64,7 +63,7 @@ const Login = () => {
       className={`${
         darkMode ? "bg-slate-900 text-white" : "bg-gray-100 text-gray-900"
       } flex flex-col md:flex-row overflow-hidden`}
-      style={{ height: "calc(100vh - 80px)" }} // ⭐ Fix for no scroll under navbar
+      style={{ height: "calc(100vh - 68px)" }} // ⭐ Fix for no scroll under navbar
     >
       {/* THEME TOGGLE BUTTON */}
       {/* <button
