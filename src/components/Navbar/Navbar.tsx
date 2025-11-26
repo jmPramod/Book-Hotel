@@ -1,4 +1,4 @@
- import { Outlet, useLocation, Link } from 'react-router-dom';
+ import { Outlet, useLocation, Link, useNavigate } from 'react-router-dom';
 import { Sun, Moon } from 'lucide-react';
 import { useUserStore } from '../../store/useUserStore';
 import SideMenu from '../SideMenu/SideMenu';
@@ -9,7 +9,7 @@ const Navbar = () => {
   const user = useUserStore((state) => state.user);
 const logout = useUserStore((state) => state.logout);
 
-   
+   const navigation=useNavigate()
 
   return (
     <>
@@ -36,6 +36,7 @@ const logout = useUserStore((state) => state.logout);
     <Link to="/login" className="hover:text-indigo-400 transition">Sign Up</Link>
         :
             <div  onClick={()=>{
+              navigation("/")
                    localStorage.removeItem("token");
   
               logout()

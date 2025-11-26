@@ -1,73 +1,199 @@
-# React + TypeScript + Vite
+# Finance Tracker Web – Frontend (React + TypeScript)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the **frontend web application** for the Finance Tracker system.  
+It is built using **React + TypeScript**, **Zustand**, **React Query**, **Material UI / Tailwind**, and integrates with a fully documented backend (Swagger).
 
-Currently, two official plugins are available:
+The app includes:
+- Authentication  
+- Dashboard (Income + Expense Overview)  
+- Expense Management (CRUD + Pagination + Search)  
+- Income Management  
+- Profile Page (Image Upload)  
+- Charts (Pie, Bar, Line)  
+- Dark/Light Theme  
+- Global State Management (Zustand)  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### **Dashboard**
+- Total Income / Expense Cards  
+- Pie Chart (30 Days Overview)  
+- Bar Graphs  
+- Recent Transactions  
 
-## Expanding the ESLint configuration
+### **Expenses**
+- Add / Edit / Delete Expenses  
+- Pagination + Search  
+- Excel Download  
+- Category Icons  
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### **Income**
+- Add / Edit / Delete Income  
+- Monthly Chart  
+- Excel Download  
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### **Profile**
+- Update user details  
+- Upload profile picture  
+- Dark mode toggle  
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### **Authentication**
+- Login / Register  
+- JWT-based authentication  
+- Persistent session using Zustand (localStorage)  
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## 📁 Folder Structure
+
+```
+frontend/
+│── public/
+│── src/
+│   ├── components/
+│   ├── pages/
+│   ├── store/
+│   ├── utils/
+│   ├── hooks/
+│   ├── assets/
+│   ├── types/
+│   ├── App.tsx
+│   └── main.tsx
+│── .env
+│── package.json
+│── tsconfig.json
+│── vite.config.ts
+└── README.md
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🛠️ Tech Stack
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **React + TypeScript**
+- **Vite**
+- **Zustand (Global State)**
+- **React Query (API caching)**
+- **Axios**
+- **Material UI / Tailwind CSS**
+- **React Icons / Lucide React**
+- **Recharts / Chart.js**
+
+---
+
+## 🔧 Installation & Setup
+
+### **1️⃣ Clone the repository**
+```bash
+git clone https://github.com/your-username/finance-tracker-frontend.git
+cd finance-tracker-frontend
 ```
+
+### **2️⃣ Install dependencies**
+```bash
+npm install
+```
+
+### **3️⃣ Create `.env` file**
+Inside the root folder, create:
+
+```
+VITE_API_BASE_URL=http://localhost:5000/api
+```
+
+Or if deployed:
+
+```
+VITE_API_BASE_URL=https://your-backend-url.com/api
+```
+
+### **4️⃣ Start the development server**
+```bash
+npm run dev
+```
+
+The app will be live at:
+
+👉 **http://localhost:5173**
+
+---
+
+## 🧪 Running Tests (Optional)
+
+```bash
+npm run test
+```
+
+---
+
+## 📦 Build for Production
+
+```bash
+npm run build
+```
+
+To preview local production build:
+
+```bash
+npm run preview
+```
+
+---
+
+## 🌐 Deployment Guide
+
+### **Deploy on Vercel**
+1. Push frontend project to GitHub  
+2. Go to https://vercel.com  
+3. Import project  
+4. Add environment variable:
+
+```
+VITE_API_BASE_URL=https://your-backend-url.com/api
+```
+
+5. Deploy  
+
+---
+
+## 🔗 API Documentation (Backend Swagger)
+
+Your backend API docs:
+
+👉 **https://book-hotel-delta-two.vercel.app/api-docs**
+
+The frontend fully consumes these APIs.
+
+---
+
+## 👨‍💻 Developer Notes
+
+- Zustand store handles authentication and dark mode  
+- All API calls are inside `/src/utils/Api.services.ts`  
+- Charts are modular & reusable  
+- UI is component-driven  
+- Most pages have separate table + modal components  
+
+---
+
+## 🤝 Contribution
+
+1. Fork the project  
+2. Create feature branch  
+3. Commit your changes  
+4. Push & create Pull Request  
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## ✨ Author
+
+**Pramod JM**  
+Full-stack MERN + TypeScript Developer  
