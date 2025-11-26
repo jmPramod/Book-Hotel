@@ -80,7 +80,7 @@ const TransactionPieChart: React.FC<Props> = ({
               cx="50%"
               cy="50%"
               outerRadius={100}
-              innerRadius={50}   // 🔥 MAKES IT DONUT
+              innerRadius={50} 
               paddingAngle={3}
               label={renderLabel}
             >
@@ -94,8 +94,7 @@ const TransactionPieChart: React.FC<Props> = ({
 
             <Tooltip content={CustomTooltip} />
             <Legend verticalAlign="bottom" height={50} />
-
-            {/* 🔥 Smooth total in the center */}
+ 
             <text
               x="50%"
               y="50%"

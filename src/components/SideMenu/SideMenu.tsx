@@ -27,17 +27,16 @@ console.log("user",user);
 
   return (
     <div className="flex">
-      {/* Sidebar */}
+   
       <div
         className={`
           min-h-[90vh] px-4 py-6 flex flex-col gap-6 transition-all duration-300
           ${isOpen ? "w-64" : "w-30"}
           ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}
         `}
-      >
-        {/* Profile + Toggle Row */}
+      > 
         <div className="flex items-center justify-between">
-          {/* PROFILE IMAGE */}
+  
           <img
             src={user?.data?.profileImage?.imageUrl}
             alt="Profile"
@@ -46,7 +45,7 @@ console.log("user",user);
               `}
           />
 
-          {/* ARROW BUTTON */}
+     
           <button
             onClick={() => setIsOpen(!isOpen)}
             className={`
@@ -58,7 +57,7 @@ console.log("user",user);
           </button>
         </div>
 
-        {/* Menu Items */}
+    
         <div className="flex flex-col gap-4 mt-6">
           {menuItems.map((item, idx) => (
             <div
@@ -76,7 +75,7 @@ console.log("user",user);
         </div>
       </div>
 
-      {/* Content Area */}
+    
       <div
         className={`
           flex-1 p-8 transition-all

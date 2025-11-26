@@ -28,7 +28,7 @@ const Income = () => {
 
   const [searchText, setSearchText] = useState("");
 
-  // Fetch income with optional search
+ 
   const fetchIncome = async (search = "") => {
     setLoading(true);
     try {
@@ -41,7 +41,7 @@ const Income = () => {
     setLoading(false);
   };
 
-  // Debounced search
+ 
   const debouncedFetch = useCallback(
     debounce((val: string) => {
       fetchIncome(val);

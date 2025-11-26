@@ -9,7 +9,7 @@ import {
 } from "recharts";
 
 const COLORS = ["#1E40AF", "#16A34A", "#DC2626"]; 
-// Blue → Balance, Green → Income, Red → Expense
+ 
 
 interface Props {
   data: {

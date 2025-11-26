@@ -65,8 +65,7 @@ const cardStyle = `${!darkMode ? "bg-white text-black" : "bg-gray-800 text-white
 return (
 <div className={`${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} min-h-screen p-6`}> <h1 className="text-3xl font-semibold mb-6">Dashboard</h1>
 
-
-  {/* Summary Cards */}
+ 
   <div className="flex flex-wrap gap-5 mb-6 items-center ">
     <div className="flex flex-col gap-3 min-w-[30%]">
       <div className={`${cardStyle} flex items-center gap-4 flex-1 min-w-[250px]`}>
@@ -93,12 +92,11 @@ return (
         </div>
       </div>
     </div>
-
-    {/* Pie Chart */}
+ 
     <TatalOverView data={data} darkMode={darkMode} />
   </div>
 
-  {/* Last 30 Days Expense */}
+ 
   <div className="flex flex-wrap gap-6 mb-6">
     <div className={`${cardStyle} flex-1 min-w-[300px]`}>
       <div className="flex items-center justify-between mb-4">
@@ -134,8 +132,7 @@ return (
       darkMode={darkMode}
     />
   </div>
-
-  {/* Last 60 Days Income */}
+ 
   <div className="flex flex-wrap gap-6 mb-6">
     <TransactionPieChart
       transactions={data.last60DaysIncome.transaction}
@@ -171,8 +168,7 @@ return (
       </ul>
     </div>
   </div>
-
-  {/* Recent Transactions */}
+ 
   <div className={`${cardStyle}`}>
     <div className="flex items-center justify-between mb-4">
       <h2 className="text-xl font-semibold">Recent Transactions</h2>
