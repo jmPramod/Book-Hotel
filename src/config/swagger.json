@@ -1,8 +1,8 @@
 {
 "swagger": "2.0",
 "info": {
-"title": "Book Hotel & Finance API Documentation",
-"description": "API documentation for Hotel operations, User authentication, and Expense/Income tracking with Dashboard",
+"title": "Money Tracker API Documentation",
+"description": "API documentation for Money Tracker, User authentication, and Expense/Income tracking with Dashboard",
 "version": "1.0.0"
 },
 "servers": [
