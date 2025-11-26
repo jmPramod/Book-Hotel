@@ -2,10 +2,10 @@
 import AxiosInstance from "./AxiosInstance";
 
 
- const baseUrl = process.env.REACT_APP_BASE_URL as string;
+ // const baseUrl = process.env.REACT_APP_BASE_URL as string;
 //const baseUrl ='http://localhost:4500'
 
-// const baseUrl ='https://book-hotel-delta-two.vercel.app'
+const baseUrl ='https://book-hotel-delta-two.vercel.app'
 export const loginApi = async (payload: {   
  
     email: String,
