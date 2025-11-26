@@ -192,7 +192,7 @@ const Login = () => {
               } text-center text-sm`}
             >
               Don't have an account?{" "}
-              <a href="/sign-up" className="text-blue-400 hover:underline">
+              <a href="/register" className="text-blue-400 hover:underline">
                 Register
               </a>
             </motion.p>
