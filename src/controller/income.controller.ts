@@ -80,28 +80,54 @@ try {
 
 
 }
-export const getIncomeController=async (req: Request, res: Response, next: NextFunction) => {
-try {
-  const userId=req.user_info.userId
-  const income =await IncomeSchema.find({userId}).sort({date:-1}) 
-  
-  if(!income)
-{
-  createError(401,'No income created')
-}
-   res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          { data:income   },
-          "Income Fetched successfully"
-        )
-      );
-} catch (error) {
-  
-} 
-}
+
+
+export const getIncomeController = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user_info.userId;
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const search = (req.query.search as string) || "";
+
+    const skip = (page - 1) * limit;
+
+    const query: any = { userId };
+
+    if (search) {
+      const num = Number(search);
+      query.$or = [
+        { source: { $regex: search, $options: "i" } }, // text search
+        ...(isNaN(num) ? [] : [{ amount: num }])       // number search if valid
+      ];
+    }
+
+    const income = await IncomeSchema.find(query)
+      .sort({ date: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const totalItems = await IncomeSchema.countDocuments(query);
+
+    res.status(200).json({
+      statusCode: 200,
+      success: true,
+      message: "Income fetched successfully",
+      data: {
+        data: income,
+        pagination: {
+          totalItems,
+          page,
+          limit,
+          totalPages: Math.ceil(totalItems / limit),
+        },
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 
 export const downloadExcelController=async (req: Request, res: Response, next: NextFunction) => {
  try {

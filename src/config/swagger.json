@@ -1,175 +1,196 @@
 {
-  "swagger": "2.0",
-  "info": {
-    "title": "Book Hotel API Documentation",
-    "description": "API documentation for Hotel operations and Hotel management",
-    "version": "1.0.0"
-  },
-  "servers": [
-    {
-      "url": "http://localhost:3000",
-      "description": "Local server"
-    }
-   
-  ],
-  "tags": [
-    {
-      "name": "Authentication",
-      "description": "Endpoints for user authentication"
-    }
-  ],
-  "paths": {
-    "/api/register": {
-      "post": {
-        "tags": ["Authentication"],
-        "summary": "User registration",
-        "description": "Creates a new user account with the provided details.",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "user",
-            "description": "User registration details",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "User created successfully",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          },
-          "401": {
-            "description": "User already exists or validation error",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "Success": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "status": {
-                  "type": "integer",
-                  "example": 201
-                },
-                "message": {
-                  "type": "string",
-                  "example": "New User created"
-                },
-                "data": {
-                  "$ref": "#/definitions/User"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/login": {
-      "post": {
-        "tags": ["Authentication"],
-        "summary": "User login",
-        "description": "Authenticates a user with the provided credentials (username and password).",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "login",
-            "description": "Login credentials",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/LoginUser"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User logged in successfully",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "token": {
-                  "type": "string",
-                  "example": "JWT_TOKEN_STRING"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Invalid credentials",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string",
-                  "example": "Invalid username or password"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "definitions": {
-     
-   "User": {
-  "type": "object",
-  "properties": {
-    "firstName": { "type": "string", "example": "John" },
-    "lastName": { "type": "string", "example": "Doe" },
-    "phone": { "type": "number", "example": 9876543210 },
-    "address": { "type": "string", "example": "123 MG Road, Bangalore" },
-    "state": { "type": "string", "example": "Karnataka" },
-    "country": { "type": "string", "example": "India" },
-    "pinCode": { "type": "number", "example": 560001 },
-    "email": { "type": "string", "example": "john@example.com" },
-    "password": { "type": "string", "example": "SecurePass@123" },
-    "isAdmin": { 
-      "type": "string",
-      "enum": ["admin", "user"],
-      "example": "user",
-      "default": "user"
-    },
-    "profileImage": {
-      "type": "object",
-      "properties": {
-        "imageUrl": {
-          "type": "string",
-          "example": "https://res.cloudinary.com/dtvq8ysaj/image/upload/v1720770108/Global%20Images/profile_new-removebg-preview_motz7n.png"
-        },
-        "imgPublicId": {
-          "type": "string",
-          "example": null
-        }
-      }
-    }
-  },
-  "required": ["firstName", "lastName", "email", "password", "phone"]
+"swagger": "2.0",
+"info": {
+"title": "Book Hotel & Finance API Documentation",
+"description": "API documentation for Hotel operations, User authentication, and Expense/Income tracking with Dashboard",
+"version": "1.0.0"
+},
+"servers": [
+{ "url": "http://localhost:3000", "description": "Local server" }
+],
+"tags": [
+{ "name": "Authentication", "description": "Endpoints for user authentication" },
+{ "name": "Expense", "description": "Endpoints for managing user expenses" },
+{ "name": "Income", "description": "Endpoints for managing user incomes" },
+{ "name": "Dashboard", "description": "Endpoint to fetch user dashboard summary" }
+],
+"paths": {
+"/api/register": {
+"post": {
+"tags": ["Authentication"],
+"summary": "User registration",
+"parameters": [
+{ "in": "body", "name": "user", "required": true, "schema": { "$ref": "#/definitions/User" } }
+],
+"responses": { "201": { "description": "User created successfully" }, "401": { "description": "User already exists" } }
 }
-,
-
-    "LoginUser": {
-      "type": "object",
-      "properties": {
-        "email": { "type": "string", "example": "john_doe" },
-        "password": { "type": "string", "example": "securepassword" }
-      }
-    }
-  },
-  "securityDefinitions": {
-    "JWTAuth": {
-      "type": "apiKey",
-      "name": "Authorization",
-      "in": "header",
-      "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer <token>\""
-    }
-  },
-  "security": [
-    {
-      "JWTAuth": []
-    }
-  ]
+},
+"/api/login": {
+"post": {
+"tags": ["Authentication"],
+"summary": "User login",
+"parameters": [
+{ "in": "body", "name": "login", "required": true, "schema": { "$ref": "#/definitions/LoginUser" } }
+],
+"responses": { "200": { "description": "User logged in successfully" }, "401": { "description": "Invalid credentials" } }
+}
+},
+"/api/expense": {
+"post": {
+"tags": ["Expense"],
+"summary": "Add new expense",
+"parameters": [{ "in": "body", "name": "expense", "required": true, "schema": { "$ref": "#/definitions/Expense" } }],
+"security": [{ "JWTAuth": [] }],
+"responses": { "201": { "description": "Expense added successfully" } }
+},
+"get": {
+"tags": ["Expense"],
+"summary": "Get all expenses",
+"security": [{ "JWTAuth": [] }],
+"responses": { "200": { "description": "List of expenses", "schema": { "type": "array", "items": { "$ref": "#/definitions/Expense" } } } }
+}
+},
+"/api/expense/{id}": {
+"delete": {
+"tags": ["Expense"],
+"summary": "Delete an expense",
+"parameters": [{ "name": "id", "in": "path", "required": true, "type": "string" }],
+"security": [{ "JWTAuth": [] }],
+"responses": { "200": { "description": "Expense deleted successfully" } }
+},
+"patch": {
+"tags": ["Expense"],
+"summary": "Update an expense",
+"parameters": [
+{ "name": "id", "in": "path", "required": true, "type": "string" },
+{ "in": "body", "name": "expense", "required": true, "schema": { "$ref": "#/definitions/Expense" } }
+],
+"security": [{ "JWTAuth": [] }],
+"responses": { "200": { "description": "Expense updated successfully" } }
+}
+},
+"/api/download-expense-excel": {
+"get": {
+"tags": ["Expense"],
+"summary": "Download expenses as Excel",
+"security": [{ "JWTAuth": [] }],
+"responses": { "200": { "description": "Excel file generated successfully" } }
+}
+},
+"/api/income": {
+"post": {
+"tags": ["Income"],
+"summary": "Add new income",
+"parameters": [{ "in": "body", "name": "income", "required": true, "schema": { "$ref": "#/definitions/Income" } }],
+"security": [{ "JWTAuth": [] }],
+"responses": { "201": { "description": "Income added successfully" } }
+},
+"get": {
+"tags": ["Income"],
+"summary": "Get all incomes",
+"security": [{ "JWTAuth": [] }],
+"responses": { "200": { "description": "List of incomes", "schema": { "type": "array", "items": { "$ref": "#/definitions/Income" } } } }
+}
+},
+"/api/income/{id}": {
+"delete": {
+"tags": ["Income"],
+"summary": "Delete an income",
+"parameters": [{ "name": "id", "in": "path", "required": true, "type": "string" }],
+"security": [{ "JWTAuth": [] }],
+"responses": { "200": { "description": "Income deleted successfully" } }
+},
+"patch": {
+"tags": ["Income"],
+"summary": "Update an income",
+"parameters": [
+{ "name": "id", "in": "path", "required": true, "type": "string" },
+{ "in": "body", "name": "income", "required": true, "schema": { "$ref": "#/definitions/Income" } }
+],
+"security": [{ "JWTAuth": [] }],
+"responses": { "200": { "description": "Income updated successfully" } }
+}
+},
+"/api/download-income-excel": {
+"get": {
+"tags": ["Income"],
+"summary": "Download incomes as Excel",
+"security": [{ "JWTAuth": [] }],
+"responses": { "200": { "description": "Excel file generated successfully" } }
+}
+},
+"/api/dashboard": {
+"get": {
+"tags": ["Dashboard"],
+"summary": "Get dashboard info",
+"description": "Fetches total income, total expense, recent transactions, and last 30/60 days summaries for the authenticated user.",
+"security": [{ "JWTAuth": [] }],
+"responses": {
+"200": {
+"description": "Dashboard info fetched successfully",
+"schema": { "$ref": "#/definitions/DashboardResponse" }
+},
+"400": { "description": "Invalid user ID" }
+}
+}
+}
+},
+"definitions": {
+"User": {
+"type": "object",
+"properties": {
+"firstName": { "type": "string" },
+"lastName": { "type": "string" },
+"phone": { "type": "number" },
+"address": { "type": "string" },
+"state": { "type": "string" },
+"country": { "type": "string" },
+"pinCode": { "type": "number" },
+"email": { "type": "string" },
+"password": { "type": "string" },
+"isAdmin": { "type": "string", "enum": ["admin", "user"], "default": "user" },
+"profileImage": { "type": "object", "properties": { "imageUrl": { "type": "string" }, "imgPublicId": { "type": "string" } } }
+},
+"required": ["firstName", "lastName", "email", "password", "phone"]
+},
+"LoginUser": { "type": "object", "properties": { "email": { "type": "string" }, "password": { "type": "string" } } },
+"Expense": {
+"type": "object",
+"properties": { "userId": { "type": "string" }, "icon": { "type": "string" }, "category": { "type": "string" }, "amount": { "type": "number" }, "date": { "type": "string", "format": "date" } },
+"required": ["category", "amount"]
+},
+"Income": {
+"type": "object",
+"properties": { "userId": { "type": "string" }, "icon": { "type": "string" }, "source": { "type": "string" }, "amount": { "type": "number" }, "date": { "type": "string", "format": "date" } },
+"required": ["source", "amount"]
+},
+"DashboardResponse": {
+"type": "object",
+"properties": {
+"data": {
+"type": "object",
+"properties": {
+"totalBalance": { "type": "number" },
+"totalIncome": { "type": "number" },
+"totalExpense": { "type": "number" },
+"last30DaysExpense": {
+"type": "object",
+"properties": { "total": { "type": "number" }, "transaction": { "type": "array", "items": { "$ref": "#/definitions/Expense" } } }
+},
+"last60DaysIncome": {
+"type": "object",
+"properties": { "total": { "type": "number" }, "transaction": { "type": "array", "items": { "$ref": "#/definitions/Income" } } }
+},
+"recentTransaction": { "type": "array", "items": { "type": "object" } }
+}
+},
+"message": { "type": "string" },
+"status": { "type": "number" }
+}
+}
+},
+"securityDefinitions": {
+"JWTAuth": { "type": "apiKey", "name": "Authorization", "in": "header", "description": "JWT Authorization header using Bearer scheme" }
+},
+"security": [{ "JWTAuth": [] }]
 }
