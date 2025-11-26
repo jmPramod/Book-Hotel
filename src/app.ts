@@ -24,7 +24,7 @@ const whitelist = [
   process.env.CLIENT_URL,
   "http://localhost:5173",
   "http://localhost:4500",
-  'https://book-room-hotel.netlify.app/',
+  'https://book-room-hotel.netlify.app',
   "https://book-hotel-delta-two.vercel.app"
 ];
 
