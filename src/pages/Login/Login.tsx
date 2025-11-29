@@ -192,9 +192,9 @@ const Login = () => {
               } text-center text-sm`}
             >
               Don't have an account?{" "}
-              <a href="/sign-up" className="text-blue-400 hover:underline">
+              <div  onClick={()=>navigate("/sign-up")}  className="text-blue-400 hover:underline">
                 Register
-              </a>
+              </div>
             </motion.p>
           </form>
         </div>
